@@ -1,0 +1,8 @@
+{
+  "LIM_SUP": 10,
+  "LIM_INF": 10,
+  "TOL_ZERO": 0.5,
+  "FAIXA_BAIXA": 10,
+  "FAIXA_MEDIA": 20,
+  "FAIXA_ALTA": 50
+}

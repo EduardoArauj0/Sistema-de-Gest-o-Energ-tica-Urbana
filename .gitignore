@@ -1,0 +1,35 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente locais e segredos
+.env
+.env.local
+.env.*.local
+
+# Banco de dados SQLite local e arquivos de jornal/WAL
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+backend/data/
+
+# Logs de execução
+logs/
+*.log
+npm-debug.log*
+
+# Cobertura de testes (Istanbul / nyc)
+.nyc_output/
+coverage/
+
+# Artefatos temporários do Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

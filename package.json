@@ -1,0 +1,24 @@
+{
+  "name": "sge-urbano",
+  "version": "1.0.0",
+  "description": "SGE-Urbano — Sistema de Gestão Energética Urbana (Simulação de Monitoramento Energético Público)",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "dev": "node --watch backend/src/server.js",
+    "start:test": "node -e \"process.env.NODE_ENV='test'; require('./backend/src/server.js')\"",
+    "test:unit": "node --test tests/unit/**/*.test.js"
+  },
+  "keywords": [
+    "sge-urbano",
+    "smart-cities",
+    "energia",
+    "qualidade-de-software",
+    "unifacs"
+  ],
+  "author": "Eduardo Araujo, Gabriel Santana, João Anísio, Marcelo Carmo, Tiago Maciel",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
