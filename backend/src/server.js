@@ -1,8 +1,13 @@
 const { app } = require('./app');
 const { getEnv } = require('./config/env');
+const { closeDbConnection } = require('./database/connection');
+const { ensureDatabaseInitialized } = require('./database/seed');
 const { logger } = require('./shared/logger/logger');
 
 const env = getEnv();
+
+// Garante que as migrações estão aplicadas e que a seed inicial existe caso o banco seja novo
+ensureDatabaseInitialized();
 
 const server = app.listen(env.port, () => {
   logger.info(`Servidor SGE-Urbano iniciado na porta ${env.port} (${env.nodeEnv})`, {
@@ -15,6 +20,7 @@ const server = app.listen(env.port, () => {
 
 process.on('SIGINT', () => {
   server.close(() => {
+    closeDbConnection();
     logger.info('Servidor SGE-Urbano encerrado via SIGINT.', {
       operation: 'SERVER_SHUTDOWN',
     });

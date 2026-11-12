@@ -71,7 +71,17 @@ Desenvolvido no contexto do **Trabalho A3 — UC Gestão e Qualidade de Software
   npm run start:test
   ```
 
-- **Testes Unitários Base:**
+- **Executar Migrações do Banco SQLite:**
+  ```bash
+  npm run db:migrate
+  ```
+
+- **Resetar e Recarregar a Seed de Referência (Exclusivo em Ambiente de Teste — `RNF20`):**
+  ```bash
+  npm run db:seed:test
+  ```
+
+- **Testes Unitários e de Banco de Dados:**
   ```bash
   npm run test:unit
   ```
@@ -82,8 +92,23 @@ Após iniciar o servidor, acesse no navegador:
 
 ---
 
-## 6. Documentação do Projeto (`docs/`)
+## 6. Contas Sintéticas da Massa de Referência (Seed Fixa)
+
+> As senhas são persistidas no SQLite exclusivamente como hash `scrypt` (`RNF04`). O perfil `Cidadão` não possui cadastro nem login (`RN01`, `RN22`).
+
+| Perfil | Usuário (`username`) | E-mail Sintético | Senha para Teste | Status |
+|---|---|---|---|---|
+| **Gestor** | `gestor` | `gestor@sge-urbano.simulado.local` | `Gestor@123` | `Ativo` |
+| **Técnico 1** | `tecnico1` | `tecnico1@sge-urbano.simulado.local` | `Tecnico1@123` | `Ativo` |
+| **Técnico 2** | `tecnico2` | `tecnico2@sge-urbano.simulado.local` | `Tecnico2@123` | `Ativo` |
+
+---
+
+## 7. Documentação do Projeto (`docs/`)
 
 - [`docs/architecture/overview.md`](docs/architecture/overview.md) — Visão geral da arquitetura em camadas.
+- [`docs/architecture/database-er-diagram.md`](docs/architecture/database-er-diagram.md) — Diagrama Entidade-Relacionamento (DER) e restrições de integridade.
+- [`docs/architecture/data-dictionary.md`](docs/architecture/data-dictionary.md) — Dicionário de Dados completo do SQLite.
+- [`docs/decisions/ADR-001-sqlite-and-schema.md`](docs/decisions/ADR-001-sqlite-and-schema.md) — Decisão arquitetural sobre `node:sqlite`, índices parciais e trava `RNF20`.
 - [`docs/open-decisions.md`](docs/open-decisions.md) — Registro de pendências documentais e decisões técnicas aprovadas.
 - [`docs/requirements-traceability.md`](docs/requirements-traceability.md) — Matriz completa de rastreabilidade (`RF`, `RNF`, `RN`, `UC`, `CA` e `CT`).

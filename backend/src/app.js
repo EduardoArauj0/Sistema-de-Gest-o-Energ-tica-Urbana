@@ -1,6 +1,7 @@
 const path = require('node:path');
 const express = require('express');
 const { getEnv } = require('./config/env');
+const { createTestingRouter } = require('./modules/testing/testing.routes');
 const { notFoundHandler, errorHandler } = require('./middlewares/error.middleware');
 
 function createApp() {
@@ -28,6 +29,11 @@ function createApp() {
       timestamp: new Date().toISOString(),
     });
   });
+
+  // RNF20 / CT26: Endpoint de reset e seed existe SOMENTE em ambiente de teste
+  if (env.isTest) {
+    app.use('/api/testing', createTestingRouter());
+  }
 
   // Tratamento de rotas não encontradas da API e erros centralizados
   app.use('/api', notFoundHandler);

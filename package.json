@@ -7,6 +7,8 @@
     "start": "node backend/src/server.js",
     "dev": "node --watch backend/src/server.js",
     "start:test": "node -e \"process.env.NODE_ENV='test'; require('./backend/src/server.js')\"",
+    "db:migrate": "node backend/src/database/migrate.js",
+    "db:seed:test": "node -e \"process.env.NODE_ENV='test'; const { resetAndSeedDatabase } = require('./backend/src/database/seed'); console.log(resetAndSeedDatabase());\"",
     "test:unit": "node --test tests/unit/**/*.test.js"
   },
   "keywords": [

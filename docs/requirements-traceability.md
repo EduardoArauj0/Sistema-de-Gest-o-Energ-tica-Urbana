@@ -43,9 +43,9 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | ID | Atributo | Requisito Resumido | Casos de Teste | Módulos / Arquivos | Situação |
 |---|---|---|---|---|---|
 | **RNF01** | Confiabilidade | Detecção de anomalias determinística (100% idêntica para mesma entrada) | CT06 | `backend/src/modules/anomalies/` (Etapa 5) | Não iniciado |
-| **RNF02** | Confiabilidade | Alertas, ocorrências e OS íntegros após reinício da aplicação | CT17 | `backend/src/database/` (Etapa 2) | Não iniciado |
+| **RNF02** | Confiabilidade | Alertas, ocorrências e OS íntegros após reinício da aplicação | CT17 | `backend/src/database/connection.js`, `001_initial_schema.sql` | **Em desenvolvimento** (Schema SQLite persistente e triggers `RN14` criados na Etapa 2) |
 | **RNF03** | Confiabilidade | Falha no gerador não impede consulta; erro registrado em log | CT04 | `backend/src/shared/logger/logger.js`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (Logger criado na Etapa 1) |
-| **RNF04** | Segurança | Senhas armazenadas com hash seguro, nunca em texto claro | CT01 | `backend/src/modules/auth/` (Etapa 3) | Não iniciado |
+| **RNF04** | Segurança | Senhas armazenadas com hash seguro, nunca em texto claro | CT01 | `backend/src/shared/security/password.js`, `referenceSeedData.js`, `001_initial_schema.sql` | **Implementado** (Hash `scrypt` + constraint SQLite na Etapa 2; testado em `database.test.js`) |
 | **RNF05** | Segurança | Autenticação/autorização por perfil validada no servidor em cada requisição | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` (Etapa 3) | Não iniciado |
 | **RNF06** | Segurança | Sessão expira após 30 minutos de inatividade | CT01 | `backend/src/modules/auth/`, `backend/src/config/env.js` | **Em desenvolvimento** (Config `SESSION_TIMEOUT_MINUTES=30` na Etapa 1) |
 | **RNF07** | Segurança/Privacidade | Dados pessoais do cidadão mínimos e visíveis apenas ao Gestor | CT10, CT14 | `backend/src/modules/occurrences/`, `backend/src/modules/work-orders/` (Etapas 6/7) | Não iniciado |
@@ -60,8 +60,8 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RNF16** | Auditabilidade | Ações críticas (login, estado de OS, bloqueio/desbloqueio) registram quem, quando e o quê | CT01, CT11, CT12, CT19, CT20 | `backend/src/modules/audit/` (Etapas 2/3/4/6) | Não iniciado |
 | **RNF17** | Transparência | Aviso permanente de dados simulados na interface e origem `"SIMULADO"` nas leituras | CT04, CT24 | `frontend/index.html`, `backend/src/app.js` | **Em desenvolvimento** (Banner inicial e `/api/health` na Etapa 1) |
 | **RNF18** | Manutenibilidade | API REST em Node.js/Express organizada em camadas com SQLite isolado no repositório | CT06 | `backend/src/` | **Em desenvolvimento** (Estrutura modular iniciada na Etapa 1) |
-| **RNF19** | Segurança | Servidor valida tipo, formato e limites e usa consultas SQL parametrizadas | CT03 | `backend/src/middlewares/`, `backend/src/modules/*/*.repository.js` | Não iniciado |
-| **RNF20** | Segurança | Endpoint/script de reset e seed existe somente em ambiente de teste | CT26 | `backend/src/config/env.js`, `backend/src/database/` (Etapa 2) | **Em desenvolvimento** (`env.isTest` configurado na Etapa 1) |
+| **RNF19** | Segurança | Servidor valida tipo, formato e limites e usa consultas SQL parametrizadas | CT03 | `backend/src/database/seed.js`, `001_initial_schema.sql` | **Em desenvolvimento** (Prepared statements e constraints SQL na Etapa 2) |
+| **RNF20** | Segurança | Endpoint/script de reset e seed existe somente em ambiente de teste | CT26 | `backend/src/database/seed.js`, `backend/src/modules/testing/testing.routes.js`, `backend/src/app.js` | **Testado** (Validado em `tests/unit/database.test.js` na Etapa 2) |
 
 ---
 
@@ -131,4 +131,4 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **CT23** | Idioma da interface em português do Brasil | Sistema, Aceitação | NÃO / Complementar automatizado | Não iniciado |
 | **CT24** | Transparência da simulação e origem das leituras (`SIMULADO`) | Integração, Sistema | SIM (Cypress E2E/API) | Não iniciado |
 | **CT25** | Verificação de versionamento e commits de integrantes no GitHub | Aceitação | NÃO (Inspeção documental GitHub) | Não iniciado |
-| **CT26** | Indisponibilidade do reset/seed no ambiente normal | Integração, Sistema | SIM (Cypress API + inspeção) | Não iniciado |
+| **CT26** | Indisponibilidade do reset/seed no ambiente normal | Integração, Sistema | SIM (Cypress API + `tests/unit/database.test.js`) | **Testado** (Validado em `tests/unit/database.test.js`) |
