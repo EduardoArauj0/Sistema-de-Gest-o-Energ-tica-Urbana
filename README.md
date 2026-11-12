@@ -107,6 +107,7 @@ Após iniciar o servidor, acesse no navegador:
 ## 7. Documentação do Projeto (`docs/`)
 
 - [`docs/architecture/overview.md`](docs/architecture/overview.md) — Visão geral da arquitetura em camadas.
+- [`docs/architecture/api-contracts.md`](docs/architecture/api-contracts.md) — Contratos dos endpoints da API REST.
 - [`docs/architecture/database-er-diagram.md`](docs/architecture/database-er-diagram.md) — Diagrama Entidade-Relacionamento (DER) e restrições de integridade.
 - [`docs/architecture/data-dictionary.md`](docs/architecture/data-dictionary.md) — Dicionário de Dados completo do SQLite.
 - [`docs/decisions/ADR-001-sqlite-and-schema.md`](docs/decisions/ADR-001-sqlite-and-schema.md) — Decisão arquitetural sobre `node:sqlite`, índices parciais e trava `RNF20`.

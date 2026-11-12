@@ -1,6 +1,9 @@
 const path = require('node:path');
 const express = require('express');
 const { getEnv } = require('./config/env');
+const { createAuthRouter } = require('./modules/auth/auth.routes');
+const { createUsersRouter } = require('./modules/users/users.routes');
+const { createAuditRouter } = require('./modules/audit/audit.routes');
 const { createTestingRouter } = require('./modules/testing/testing.routes');
 const { notFoundHandler, errorHandler } = require('./middlewares/error.middleware');
 
@@ -29,6 +32,11 @@ function createApp() {
       timestamp: new Date().toISOString(),
     });
   });
+
+  // Rotas de Autenticação, Usuários e Auditoria (Etapa 3)
+  app.use('/api/auth', createAuthRouter());
+  app.use('/api/users', createUsersRouter());
+  app.use('/api/audit', createAuditRouter());
 
   // RNF20 / CT26: Endpoint de reset e seed existe SOMENTE em ambiente de teste
   if (env.isTest) {

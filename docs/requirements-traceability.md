@@ -17,8 +17,8 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 
 | ID | Descrição Resumida | Prioridade | RNs Associadas | UCs | Critérios de Aceitação | Casos de Teste | Módulos / Arquivos | Testes Automatizados | Situação |
 |---|---|---|---|---|---|---|---|---|---|
-| **RF01** | Autenticar Gestor e Técnico (login/logout); Cidadão sem login | Alta | RN01, RN30 | UC01 | CA01.1, CA01.2, CA01.3 | CT01 | `backend/src/modules/auth/` (Etapa 3) | Planejado (`CT01` — Etapa 3/10) | Não iniciado |
-| **RF02** | Restringir funcionalidades e dados conforme perfil | Alta | RN01, RN15, RN30 | UC01, UC08, UC09, UC15 | CA02.1, CA02.2 | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` (Etapa 3) | Planejado (`CT01`, `CT10`, `CT18`) | Não iniciado |
+| **RF01** | Autenticar Gestor e Técnico (login/logout); Cidadão sem login | Alta | RN01, RN30 | UC01 | CA01.1, CA01.2, CA01.3 | CT01 | `backend/src/modules/auth/` | `tests/unit/auth-and-rbac.test.js` (`CT01`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF02** | Restringir funcionalidades e dados conforme perfil | Alta | RN01, RN15, RN30 | UC01, UC08, UC09, UC15 | CA02.1, CA02.2 | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` | `tests/unit/auth-and-rbac.test.js` (`CT01`) | **Em desenvolvimento** (Middleware RBAC testado na Etapa 3) |
 | **RF03** | Cadastrar, consultar, editar e inativar regiões | Alta | RN04, RN20 | UC02 | CA03.1, CA03.2, CA03.3 | CT02 | `backend/src/modules/regions/` (Etapa 4) | Planejado (`CT02`) | Não iniciado |
 | **RF04** | Cadastrar, consultar, editar e inativar equipamentos | Alta | RN02, RN03, RN04 | UC03 | CA04.1, CA04.2, CA04.3 | CT03 | `backend/src/modules/equipment/` (Etapa 4) | Planejado (`CT03`) | Não iniciado |
 | **RF05** | Gerar leituras simuladas em lote (normal, pico, falha) | Alta | RN04, RN05, RN24 | UC04 | CA05.1, CA05.2, CA05.3 | CT04, CT24 | `backend/src/modules/readings/` (Etapa 5) | Planejado (`CT04`, `CT24`) | Não iniciado |
@@ -45,9 +45,9 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RNF01** | Confiabilidade | Detecção de anomalias determinística (100% idêntica para mesma entrada) | CT06 | `backend/src/modules/anomalies/` (Etapa 5) | Não iniciado |
 | **RNF02** | Confiabilidade | Alertas, ocorrências e OS íntegros após reinício da aplicação | CT17 | `backend/src/database/connection.js`, `001_initial_schema.sql` | **Em desenvolvimento** (Schema SQLite persistente e triggers `RN14` criados na Etapa 2) |
 | **RNF03** | Confiabilidade | Falha no gerador não impede consulta; erro registrado em log | CT04 | `backend/src/shared/logger/logger.js`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (Logger criado na Etapa 1) |
-| **RNF04** | Segurança | Senhas armazenadas com hash seguro, nunca em texto claro | CT01 | `backend/src/shared/security/password.js`, `referenceSeedData.js`, `001_initial_schema.sql` | **Implementado** (Hash `scrypt` + constraint SQLite na Etapa 2; testado em `database.test.js`) |
-| **RNF05** | Segurança | Autenticação/autorização por perfil validada no servidor em cada requisição | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` (Etapa 3) | Não iniciado |
-| **RNF06** | Segurança | Sessão expira após 30 minutos de inatividade | CT01 | `backend/src/modules/auth/`, `backend/src/config/env.js` | **Em desenvolvimento** (Config `SESSION_TIMEOUT_MINUTES=30` na Etapa 1) |
+| **RNF04** | Segurança | Senhas armazenadas com hash seguro, nunca em texto claro | CT01 | `backend/src/shared/security/password.js`, `referenceSeedData.js`, `001_initial_schema.sql` | **Testado** (`database.test.js`, `auth-and-rbac.test.js`) |
+| **RNF05** | Segurança | Autenticação/autorização por perfil validada no servidor em cada requisição | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` | **Em desenvolvimento** (Middleware validado para rotas da Etapa 3 em `auth-and-rbac.test.js`) |
+| **RNF06** | Segurança | Sessão expira após 30 minutos de inatividade | CT01 | `backend/src/modules/auth/auth.service.js`, `sessions.repository.js` | **Testado** (Validado com 29min vs $\ge 30$min em `auth-and-rbac.test.js`) |
 | **RNF07** | Segurança/Privacidade | Dados pessoais do cidadão mínimos e visíveis apenas ao Gestor | CT10, CT14 | `backend/src/modules/occurrences/`, `backend/src/modules/work-orders/` (Etapas 6/7) | Não iniciado |
 | **RNF08** | Usabilidade | Registro de ocorrência em até 3 interações a partir da tela inicial | CT13 | `frontend/` (Etapa 9) | Não iniciado |
 | **RNF09** | Usabilidade | Severidade por cor e texto; erros informam campo e motivo | CT03, CT08, CT13 | `backend/src/shared/errors/AppError.js`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (`AppError` com `field` e `reason` criado na Etapa 1) |
@@ -57,7 +57,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RNF13** | Manutenibilidade | Limites e faixas configuráveis sem alteração de código | CT06 | `backend/src/config/anomaly-params.json`, `backend/src/config/env.js` | **Em desenvolvimento** (Config externa criada na Etapa 1) |
 | **RNF14** | Manutenibilidade | Projeto versionado no GitHub com commits de pelo menos 2 integrantes | CT25 | Repositório Git (commits manuais pelo proprietário/equipe) | Em desenvolvimento (Git inicializado) |
 | **RNF15** | Portabilidade | Compatibilidade em Chrome, Firefox e Edge atuais + documentação de execução | CT22 | `README.md`, `frontend/` | **Em desenvolvimento** (`README.md` criado na Etapa 1) |
-| **RNF16** | Auditabilidade | Ações críticas (login, estado de OS, bloqueio/desbloqueio) registram quem, quando e o quê | CT01, CT11, CT12, CT19, CT20 | `backend/src/modules/audit/` (Etapas 2/3/4/6) | Não iniciado |
+| **RNF16** | Auditabilidade | Ações críticas (login, estado de OS, bloqueio/desbloqueio) registram quem, quando e o quê | CT01, CT11, CT12, CT19, CT20 | `backend/src/modules/audit/` | **Em desenvolvimento** (Módulo de auditoria e eventos de login/acesso negado testados na Etapa 3) |
 | **RNF17** | Transparência | Aviso permanente de dados simulados na interface e origem `"SIMULADO"` nas leituras | CT04, CT24 | `frontend/index.html`, `backend/src/app.js` | **Em desenvolvimento** (Banner inicial e `/api/health` na Etapa 1) |
 | **RNF18** | Manutenibilidade | API REST em Node.js/Express organizada em camadas com SQLite isolado no repositório | CT06 | `backend/src/` | **Em desenvolvimento** (Estrutura modular iniciada na Etapa 1) |
 | **RNF19** | Segurança | Servidor valida tipo, formato e limites e usa consultas SQL parametrizadas | CT03 | `backend/src/database/seed.js`, `001_initial_schema.sql` | **Em desenvolvimento** (Prepared statements e constraints SQL na Etapa 2) |
@@ -69,7 +69,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 
 | ID | Descrição Resumida | Requisitos / UCs | Casos de Teste | Situação |
 |---|---|---|---|---|
-| **RN01** | Perfis exclusivos (Gestor, Técnico, Cidadão) e escopo de acesso | RF01, RF02 / UC01 | CT01, CT10 | Não iniciado |
+| **RN01** | Perfis exclusivos (Gestor, Técnico, Cidadão) e escopo de acesso | RF01, RF02 / UC01 | CT01, CT10 | **Em desenvolvimento** (Validado na Etapa 3 para auth/users/audit) |
 | **RN02** | Equipamento pertence a 1 região e 1 tipo (`poste` ou `predio_municipal`) | RF04 / UC03 | CT03 | Não iniciado |
 | **RN03** | Consumo esperado obrigatório e $> 0$ | RF04 / UC03 | CT03 | Não iniciado |
 | **RN04** | Equipamento ou região inativos não geram leituras, mas mantêm histórico | RF03, RF04, RF05 / UC02, UC04 | CT02, CT04 | Não iniciado |
@@ -98,7 +98,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RN27** | Bloqueio de região bloqueia em cascata equipamentos Ativos; só Ativos podem ser bloqueados; desbloqueio exige só confirmação | RF17 / UC15 | CT18, CT20 | Não iniciado |
 | **RN28** | Consumo abaixo é desvio percentual negativo em relação ao esperado $E$ | RF06 / UC05 | CT05 | Não iniciado |
 | **RN29** | Coordenadas geográficas simuladas fixas exibidas com Leaflet.js e OpenStreetMap | RF15 / UC13 | CT21 | Não iniciado |
-| **RN30** | Gestor e Técnico autenticam-se com sessão no servidor; Cidadão sem login; persistência em SQLite | RF01, RNF02, RNF18 | CT01, CT17 | Não iniciado |
+| **RN30** | Gestor e Técnico autenticam-se com sessão no servidor; Cidadão sem login; persistência em SQLite | RF01, RNF02, RNF18 | CT01, CT17 | **Testado** (Validado em `auth-and-rbac.test.js`) |
 
 ---
 
@@ -106,7 +106,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 
 | ID | Título do Caso de Teste | Nível | Candidato à Automação | Situação |
 |---|---|---|---|---|
-| **CT01** | Autenticação, controle de acesso e armazenamento de senha | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
+| **CT01** | Autenticação, controle de acesso e armazenamento de senha | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `tests/unit/auth-and-rbac.test.js`) | **Testado** (Validado na API/Banco em `auth-and-rbac.test.js`; E2E UI na Etapa 10) |
 | **CT02** | Inativação de região e inativação em cascata dos equipamentos | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
 | **CT03** | Validação do consumo esperado e de entrada de texto (SQLi) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
 | **CT04** | Geração em lote, origem simulada e resiliência à falha do gerador | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
