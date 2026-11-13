@@ -197,3 +197,46 @@ Este documento descreve os contratos dos endpoints implementados na API REST do 
 - **Acesso:** Exclusivo `gestor`.
 - **Corpo:** `{ "confirmed": true }` (sem motivo — `CA17.13`).
 - **Efeito (`RN17`, `CT19`):** Restaura o estado operacional anterior (`Ativo`), devolve alertas `Suspenso` para `Ativo` e registra `EQUIPMENT_UNBLOCKED`.
+
+---
+
+## 8. Leituras Simuladas e Parâmetros de Anomalia (`RF05`, `RF06`, `RF07`, `RN04`–`RN08`, `RN24`, `RN28`, `RNF01`, `RNF03`, `RNF12`, `RNF13`, `RNF17`, `CT04`–`CT06`)
+
+### `POST /api/readings/generate-batch`
+- **Acesso:** Exclusivo `gestor` (`CA05.1`, `RN01`).
+- **Corpo da Requisição:**
+  ```json
+  {
+    "scenario": "normal",
+    "region_id": 1,
+    "equipment_id": null,
+    "measured_consumption_kwh": null,
+    "inject_error": false
+  }
+  ```
+- **Cenários suportados (`scenario`):**
+  - `"normal"`: Consumo medido igual ao esperado $E$ ($\text{desvio} = 0\%$, sem anomalia — `CA05.1`, `CT04`).
+  - `"pico"`: Consumo medido multiplicado por `SIMULATION_PEAK_FACTOR` (padrão `1.50` = $+50\%$, `consumo_acima`, severidade `Alta` — `OD-03`).
+  - `"falha"`: Consumo medido de `0.5 kWh` ($\le \text{TOL\_ZERO}$, `falha_total`, severidade `Alta` — `CA05.3`, `CT04`).
+  - `"manual"`: Permite informar `measured_consumption_kwh` explícito para testes determinísticos de valor-limite.
+- **Regras de Elegibilidade (`RN04`, `RN17`, `CA03.2`, `CA05.2`, `CT04`):**
+  - Apenas equipamentos com `status = 'Ativo'` pertencentes a regiões com `status = 'Ativo'` recebem leituras.
+  - Equipamentos/regiões `Inativo` ou `Bloqueado` são ignorados e reportados em `skipped_equipments`.
+- **Tratamento de Falha no Gerador (`RNF03`, `UC04-E2`, `CT04`):**
+  - Se ocorrer falha (`inject_error: true`), o sistema registra erro estruturado em `logs/app-error.log` com `operation: "BATCH_READING_GENERATION"`, preserva integralmente as leituras existentes e retorna `500 READING_GENERATOR_ERROR`.
+- **Integração com Alertas (`UC04 -> UC05`, `RN08`):**
+  - Leituras anômalas criam alerta `Ativo` ou atualizam o alerta ativo existente do mesmo `(equipment_id, anomaly_type)` sem duplicação (`occurrence_count + 1`).
+
+### `GET /api/readings`
+- **Acesso:** Autenticado (`gestor`, `tecnico`).
+- **Query Params Opcionais:** `equipment_id`, `region_id`, `scenario`, `is_anomaly`, `batch_id`, `start_date`, `end_date`, `limit`.
+- **Resposta `200 OK`:** Lista as leituras com `origin: "SIMULADO"`, `unit: "kWh"`, `deviation_percent`, `anomaly_type` e `severity`.
+
+### `GET /api/readings/anomaly-params`
+- **Acesso:** Autenticado (`gestor`, `tecnico`).
+- **Resposta `200 OK`:** Retorna os parâmetros ativos (`LIM_SUP`, `LIM_INF`, `TOL_ZERO`, `FAIXA_BAIXA`, `FAIXA_MEDIA`, `FAIXA_ALTA`).
+
+### `PUT /api/readings/anomaly-params`
+- **Acesso:** Exclusivo `gestor` (`RNF13`, `CT06`).
+- **Corpo:** `{ "LIM_SUP": 15 }` ou `{ "reset": true }`.
+- **Efeito:** Atualiza os parâmetros de detecção em tempo de execução sem necessidade de alterar código-fonte e registra `ANOMALY_PARAMS_UPDATED` na auditoria.
