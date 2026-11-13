@@ -120,3 +120,80 @@ Este documento descreve os contratos dos endpoints implementados na API REST do 
 - **Acesso:** Exclusivo `gestor`.
 - **Query Params Opcionais:** `action`, `target_type`, `target_id`, `actor_user_id`, `limit` (padrão `100`).
 - **Resposta `200 OK`:** Lista cronológica decrescente dos eventos de auditoria com autor, perfil, data/hora, ação, objeto, motivo e metadados.
+
+---
+
+## 6. Regiões (`RF03`, `RF17`, `RN04`, `RN16`, `RN17`, `RN20`, `RN27`, `CT02`, `CT20`)
+
+### `GET /api/regions/public`
+- **Acesso:** Público (usado pelo formulário de ocorrência do Cidadão — `RF12`, `UC10`).
+- **Resposta `200 OK`:** Lista regiões com `status = 'Ativo'`.
+
+### `GET /api/regions`
+- **Acesso:** Exclusivo `gestor`.
+- **Query Params Opcionais:** `status` (`Ativo` | `Inativo` | `Bloqueado`).
+- **Resposta `200 OK`:** Lista regiões com contagem de equipamentos totais e ativos.
+
+### `POST /api/regions`
+- **Acesso:** Exclusivo `gestor`.
+- **Corpo:** `{ "name": "Região C", "code": "REG-C", "description": "...", "latitude_center": -12.97, "longitude_center": -38.50 }`
+
+### `PUT /api/regions/:id`
+- **Acesso:** Exclusivo `gestor`.
+
+### `PATCH /api/regions/:id/inactivate`
+- **Acesso:** Exclusivo `gestor`.
+- **Efeito (`RN20`, `CA03.2`, `CA03.3`, `CT02`):** Altera a região para `Inativo`, inativa em cascata todos os equipamentos vinculados, preserva todo o histórico e registra `REGION_INACTIVATED` na auditoria.
+
+### `POST /api/regions/:id/block`
+- **Acesso:** Exclusivo `gestor` (`403` para `tecnico`, `401` para `visitante`, ambos auditados).
+- **Corpo:** `{ "reason": "Motivo com no mínimo 10 caracteres", "confirmed": true }`
+- **Efeito (`RN16`, `RN17`, `RN27`, `CT20`):** Exige região `Ativo` e `reason.trim().length >= 10`. Altera a região e todos os seus equipamentos `Ativo` para `Bloqueado`, suspende alertas ativos (`Suspenso`), preserva OS em andamento e registra `REGION_BLOCKED`.
+
+### `POST /api/regions/:id/unblock`
+- **Acesso:** Exclusivo `gestor`.
+- **Corpo:** `{ "confirmed": true }` (sem necessidade de motivo — `CA17.13`).
+- **Efeito (`RN17`, `RN27`, `CT20`):** Restaura a região e os equipamentos vinculados ao estado operacional anterior (`Ativo`), reativa alertas `Suspenso` para `Ativo` e registra `REGION_UNBLOCKED`.
+
+---
+
+## 7. Equipamentos (`RF04`, `RF17`, `RN02`–`RN04`, `RN16`, `RN17`, `RNF09`, `RNF19`, `CT03`, `CT18`, `CT19`)
+
+### `GET /api/equipments`
+- **Acesso:** Exclusivo `gestor` (`CA02.1`, `CT01`).
+- **Query Params Opcionais:** `region_id`, `type` (`poste` | `predio_municipal`), `status` (`Ativo` | `Inativo` | `Bloqueado`).
+
+### `POST /api/equipments`
+- **Acesso:** Exclusivo `gestor`.
+- **Corpo:**
+  ```json
+  {
+    "type": "poste",
+    "region_id": 1,
+    "location": "Praça Municipal, Ponto 03",
+    "expected_consumption_kwh": 100,
+    "name": "Poste Simulado 03",
+    "code": "EQ-POSTE-99"
+  }
+  ```
+- **Validações (`RN02`, `RN03`, `RNF09`, `RNF19`, `CT03`):**
+  - `expected_consumption_kwh <= 0` é recusado com `400 VALIDATION_ERROR` (`field: "expected_consumption_kwh"`).
+  - Ausência de `region_id` ou região inexistente/inativa é recusada (`field: "region_id"`).
+  - Textos com caracteres especiais ou vetores SQL Injection em `location` são persistidos com segurança por *prepared statements* sem execução SQL.
+
+### `PUT /api/equipments/:id`
+- **Acesso:** Exclusivo `gestor`.
+
+### `PATCH /api/equipments/:id/inactivate`
+- **Acesso:** Exclusivo `gestor`.
+- **Efeito (`RN04`):** Inativa o equipamento preservando leituras, alertas e OS históricas.
+
+### `POST /api/equipments/:id/block`
+- **Acesso:** Exclusivo `gestor` (`CT18`).
+- **Corpo:** `{ "reason": "1234567890", "confirmed": true }`
+- **Efeito (`RN16`, `RN17`, `CT18`, `CT19`):** Exige equipamento `Ativo` e `reason.trim().length >= 10`. Altera para `Bloqueado`, suspende alertas ativos (`Suspenso`), preserva OS em andamento e registra `EQUIPMENT_BLOCKED`.
+
+### `POST /api/equipments/:id/unblock`
+- **Acesso:** Exclusivo `gestor`.
+- **Corpo:** `{ "confirmed": true }` (sem motivo — `CA17.13`).
+- **Efeito (`RN17`, `CT19`):** Restaura o estado operacional anterior (`Ativo`), devolve alertas `Suspenso` para `Ativo` e registra `EQUIPMENT_UNBLOCKED`.

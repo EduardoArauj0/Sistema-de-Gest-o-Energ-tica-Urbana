@@ -19,8 +19,8 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 |---|---|---|---|---|---|---|---|---|---|
 | **RF01** | Autenticar Gestor e Técnico (login/logout); Cidadão sem login | Alta | RN01, RN30 | UC01 | CA01.1, CA01.2, CA01.3 | CT01 | `backend/src/modules/auth/` | `tests/unit/auth-and-rbac.test.js` (`CT01`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF02** | Restringir funcionalidades e dados conforme perfil | Alta | RN01, RN15, RN30 | UC01, UC08, UC09, UC15 | CA02.1, CA02.2 | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` | `tests/unit/auth-and-rbac.test.js` (`CT01`) | **Em desenvolvimento** (Middleware RBAC testado na Etapa 3) |
-| **RF03** | Cadastrar, consultar, editar e inativar regiões | Alta | RN04, RN20 | UC02 | CA03.1, CA03.2, CA03.3 | CT02 | `backend/src/modules/regions/` (Etapa 4) | Planejado (`CT02`) | Não iniciado |
-| **RF04** | Cadastrar, consultar, editar e inativar equipamentos | Alta | RN02, RN03, RN04 | UC03 | CA04.1, CA04.2, CA04.3 | CT03 | `backend/src/modules/equipment/` (Etapa 4) | Planejado (`CT03`) | Não iniciado |
+| **RF03** | Cadastrar, consultar, editar e inativar regiões | Alta | RN04, RN20 | UC02 | CA03.1, CA03.2, CA03.3 | CT02 | `backend/src/modules/regions/` | `tests/unit/regions-and-equipment.test.js` (`CT02`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF04** | Cadastrar, consultar, editar e inativar equipamentos | Alta | RN02, RN03, RN04 | UC03 | CA04.1, CA04.2, CA04.3 | CT03 | `backend/src/modules/equipment/` | `tests/unit/regions-and-equipment.test.js` (`CT03`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF05** | Gerar leituras simuladas em lote (normal, pico, falha) | Alta | RN04, RN05, RN24 | UC04 | CA05.1, CA05.2, CA05.3 | CT04, CT24 | `backend/src/modules/readings/` (Etapa 5) | Planejado (`CT04`, `CT24`) | Não iniciado |
 | **RF06** | Detectar anomalias (acima, abaixo, falha total) | Alta | RN06, RN28 | UC05 | CA06.1 a CA06.8 | CT05, CT06 | `backend/src/modules/anomalies/` (Etapa 5) | Planejado (`CT05`, `CT06`) | Não iniciado |
 | **RF07** | Gerar/atualizar alerta para anomalia e classificar severidade | Alta | RN06, RN07, RN08 | UC05 | CA07.1, CA07.2, CA07.3 | CT05, CT06, CT07 | `backend/src/modules/anomalies/`, `backend/src/modules/alerts/` (Etapas 5/6) | Planejado (`CT05`–`CT07`) | Não iniciado |
@@ -33,7 +33,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RF14** | Exibir dashboard com cards, gráficos, tabelas e filtros (mês corrente) | Alta | RN05, RN24 | UC12 | CA14.1, CA14.2, CA14.3 | CT15 | `backend/src/modules/dashboard/` (Etapa 8) | Planejado (`CT15`) | Não iniciado |
 | **RF15** | Exibir mapa interativo com ocorrências e informações básicas | Alta | RN01, RN29 | UC13 | CA15.1, CA15.2, CA15.3 | CT21 | `backend/src/modules/occurrences/`, `frontend/` (Etapas 8/9) | Planejado (`CT21`) | Não iniciado |
 | **RF16** | Emitir relatório de consumo (região/tipo, diário/mensal) e exportar CSV | Alta | RN24 | UC14 | CA16.1, CA16.2, CA16.3 | CT16 | `backend/src/modules/reports/` (Etapa 8) | Planejado (`CT16`) | Não iniciado |
-| **RF17** | Bloquear e desbloquear regiões e equipamentos com auditoria | Alta | RN16, RN17, RN27 | UC15 | CA17.1 a CA17.13 | CT18, CT19, CT20 | `backend/src/modules/regions/`, `backend/src/modules/equipment/` (Etapa 4) | Planejado (`CT18`–`CT20`) | Não iniciado |
+| **RF17** | Bloquear e desbloquear regiões e equipamentos com auditoria | Alta | RN16, RN17, RN27 | UC15 | CA17.1 a CA17.13 | CT18, CT19, CT20 | `backend/src/modules/regions/`, `backend/src/modules/equipment/` | `tests/unit/regions-and-equipment.test.js` (`CT18`–`CT20`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF18** | Cancelar OS em Aberta ou Atribuída com justificativa obrigatória | Média | RN10, RN14, RN21, RN25 | UC16 | CA18.1, CA18.2, CA18.3 | CT12 | `backend/src/modules/work-orders/` (Etapa 6) | Planejado (`CT12`) | Não iniciado |
 
 ---
@@ -60,7 +60,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RNF16** | Auditabilidade | Ações críticas (login, estado de OS, bloqueio/desbloqueio) registram quem, quando e o quê | CT01, CT11, CT12, CT19, CT20 | `backend/src/modules/audit/` | **Em desenvolvimento** (Módulo de auditoria e eventos de login/acesso negado testados na Etapa 3) |
 | **RNF17** | Transparência | Aviso permanente de dados simulados na interface e origem `"SIMULADO"` nas leituras | CT04, CT24 | `frontend/index.html`, `backend/src/app.js` | **Em desenvolvimento** (Banner inicial e `/api/health` na Etapa 1) |
 | **RNF18** | Manutenibilidade | API REST em Node.js/Express organizada em camadas com SQLite isolado no repositório | CT06 | `backend/src/` | **Em desenvolvimento** (Estrutura modular iniciada na Etapa 1) |
-| **RNF19** | Segurança | Servidor valida tipo, formato e limites e usa consultas SQL parametrizadas | CT03 | `backend/src/database/seed.js`, `001_initial_schema.sql` | **Em desenvolvimento** (Prepared statements e constraints SQL na Etapa 2) |
+| **RNF19** | Segurança | Servidor valida tipo, formato e limites e usa consultas SQL parametrizadas | CT03 | `backend/src/modules/regions/`, `backend/src/modules/equipment/` | **Testado** (Validado com limites e vetor SQL Injection em `regions-and-equipment.test.js`) |
 | **RNF20** | Segurança | Endpoint/script de reset e seed existe somente em ambiente de teste | CT26 | `backend/src/database/seed.js`, `backend/src/modules/testing/testing.routes.js`, `backend/src/app.js` | **Testado** (Validado em `tests/unit/database.test.js` na Etapa 2) |
 
 ---
@@ -69,10 +69,10 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 
 | ID | Descrição Resumida | Requisitos / UCs | Casos de Teste | Situação |
 |---|---|---|---|---|
-| **RN01** | Perfis exclusivos (Gestor, Técnico, Cidadão) e escopo de acesso | RF01, RF02 / UC01 | CT01, CT10 | **Em desenvolvimento** (Validado na Etapa 3 para auth/users/audit) |
-| **RN02** | Equipamento pertence a 1 região e 1 tipo (`poste` ou `predio_municipal`) | RF04 / UC03 | CT03 | Não iniciado |
-| **RN03** | Consumo esperado obrigatório e $> 0$ | RF04 / UC03 | CT03 | Não iniciado |
-| **RN04** | Equipamento ou região inativos não geram leituras, mas mantêm histórico | RF03, RF04, RF05 / UC02, UC04 | CT02, CT04 | Não iniciado |
+| **RN01** | Perfis exclusivos (Gestor, Técnico, Cidadão) e escopo de acesso | RF01, RF02 / UC01 | CT01, CT10 | **Em desenvolvimento** (Validado nas Etapas 3 e 4) |
+| **RN02** | Equipamento pertence a 1 região e 1 tipo (`poste` ou `predio_municipal`) | RF04 / UC03 | CT03 | **Testado** (`regions-and-equipment.test.js`) |
+| **RN03** | Consumo esperado obrigatório e $> 0$ | RF04 / UC03 | CT03 | **Testado** (`regions-and-equipment.test.js` e `database.test.js`) |
+| **RN04** | Equipamento ou região inativos não geram leituras, mas mantêm histórico | RF03, RF04, RF05 / UC02, UC04 | CT02, CT04 | **Em desenvolvimento** (Inativação e preservação testadas em `CT02`; gerador na Etapa 5) |
 | **RN05** | Toda leitura possui origem `"SIMULADO"`, data/hora e equipamento | RF05, RNF17 / UC04 | CT04, CT24 | Não iniciado |
 | **RN06** | Detecção: falha total ($\le \text{TOL\_ZERO}$), acima ($\ge +\text{LIM\_SUP}$), abaixo ($\le -\text{LIM\_INF}$ e $> \text{TOL\_ZERO}$) | RF06 / UC05 | CT05, CT06 | Não iniciado |
 | **RN07** | Severidade: Alta (falha total ou $\|\text{desvio}\| \ge 50\%$), Média ($20\%$ a $<50\%$), Baixa ($10\%$ a $<20\%$) | RF07 / UC05 | CT05, CT06, CT08 | Não iniciado |
@@ -84,18 +84,18 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RN13** | Ocorrência exige tipo, descrição, região, endereço/referência e identificação do cidadão | RF12 / UC10 | CT13 | Não iniciado |
 | **RN14** | Alertas, ocorrências e OS não são excluídos fisicamente (preservação histórica) | RNF02, RF18 | CT17 | Não iniciado |
 | **RN15** | Dados pessoais do cidadão são visíveis somente ao Gestor | RF02, RNF07 / UC10 | CT10, CT14 | Não iniciado |
-| **RN16** | Bloqueio exige motivo $\ge 10$ caracteres, confirmação imediata e registro de auditoria | RF17, RNF16 / UC15 | CT18, CT19, CT20 | Não iniciado |
-| **RN17** | Objeto bloqueado não gera leituras/alertas, suspende alertas ativos e preserva OS em andamento; desbloqueio restaura estado | RF17 / UC15 | CT19, CT20 | Não iniciado |
+| **RN16** | Bloqueio exige motivo $\ge 10$ caracteres, confirmação imediata e registro de auditoria | RF17, RNF16 / UC15 | CT18, CT19, CT20 | **Testado** (`regions-and-equipment.test.js`) |
+| **RN17** | Objeto bloqueado não gera leituras/alertas, suspende alertas ativos e preserva OS em andamento; desbloqueio restaura estado | RF17 / UC15 | CT19, CT20 | **Testado** (`regions-and-equipment.test.js`; integração com gerador na Etapa 5) |
 | **RN18** | Alerta passa automaticamente para `Resolvido` quando OS vinculada é `Concluída` | RF11 / UC09 | CT11 | Não iniciado |
 | **RN19** | Alerta ativo possui no máximo uma OS em `Aberta`, `Atribuída` ou `Em atendimento` | RF09 / UC07 | CT09 | Não iniciado |
-| **RN20** | Inativar região inativa em cascata equipamentos vinculados e registra no histórico | RF03 / UC02 | CT02 | Não iniciado |
+| **RN20** | Inativar região inativa em cascata equipamentos vinculados e registra no histórico | RF03 / UC02 | CT02 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN21** | Reatribuição e cancelamento de OS restritos ao Gestor em OS `Aberta` ou `Atribuída`; cancelamento exige justificativa | RF10, RF18 / UC08, UC16 | CT10, CT12 | Não iniciado |
 | **RN22** | Cidadão não tem senha; recebe protocolo único para acompanhamento | RF12, RF13 / UC10, UC11 | CT13, CT14 | Não iniciado |
 | **RN23** | Tipos permitidos de ocorrência (5 tipos controlados conforme `RN23` e `OD-02`) | RF12 / UC10 | CT13 | Não iniciado |
 | **RN24** | Unidade de consumo é `kWh` e leituras são geradas em lote por botão do Gestor | RF05, RF14, RF16 / UC04 | CT04 | Não iniciado |
 | **RN25** | Se OS vinculada a alerta for `Cancelada`, alerta permanece `Ativo` e permite nova OS | RF18 / UC16 | CT12 | Não iniciado |
 | **RN26** | Protocolo único (`PROTOCOLO-YYYYMMDDXXXX`); consulta pública exibe apenas status e tipo; CPF é fictício | RF12, RF13, RNF07 / UC11 | CT14 | Não iniciado |
-| **RN27** | Bloqueio de região bloqueia em cascata equipamentos Ativos; só Ativos podem ser bloqueados; desbloqueio exige só confirmação | RF17 / UC15 | CT18, CT20 | Não iniciado |
+| **RN27** | Bloqueio de região bloqueia em cascata equipamentos Ativos; só Ativos podem ser bloqueados; desbloqueio exige só confirmação | RF17 / UC15 | CT18, CT20 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN28** | Consumo abaixo é desvio percentual negativo em relação ao esperado $E$ | RF06 / UC05 | CT05 | Não iniciado |
 | **RN29** | Coordenadas geográficas simuladas fixas exibidas com Leaflet.js e OpenStreetMap | RF15 / UC13 | CT21 | Não iniciado |
 | **RN30** | Gestor e Técnico autenticam-se com sessão no servidor; Cidadão sem login; persistência em SQLite | RF01, RNF02, RNF18 | CT01, CT17 | **Testado** (Validado em `auth-and-rbac.test.js`) |
@@ -107,8 +107,8 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | ID | Título do Caso de Teste | Nível | Candidato à Automação | Situação |
 |---|---|---|---|---|
 | **CT01** | Autenticação, controle de acesso e armazenamento de senha | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `tests/unit/auth-and-rbac.test.js`) | **Testado** (Validado na API/Banco em `auth-and-rbac.test.js`; E2E UI na Etapa 10) |
-| **CT02** | Inativação de região e inativação em cascata dos equipamentos | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT03** | Validação do consumo esperado e de entrada de texto (SQLi) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
+| **CT02** | Inativação de região e inativação em cascata dos equipamentos | Sistema, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
+| **CT03** | Validação do consumo esperado e de entrada de texto (SQLi) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
 | **CT04** | Geração em lote, origem simulada e resiliência à falha do gerador | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
 | **CT05** | Detecção de anomalias e severidade por análise de valor-limite | Unidade, Aceitação | SIM (Unidade / Cypress `cy.task`) | Não iniciado |
 | **CT06** | Caixa-branca do módulo de regras: comandos, decisões, determinismo, isolamento e configuração | Unidade, Integração Estrutural | SIM (Unidade / Cypress `cy.task` + `nyc`) | Não iniciado |
@@ -123,9 +123,9 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **CT15** | Dashboard: consistência, filtros, estado vazio e desempenho ($\le 3\text{s}$) | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
 | **CT16** | Relatório de consumo, agregação, granularidade, CSV e período inválido | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
 | **CT17** | Persistência de alertas, ocorrências e OS após reinício | Sistema | NÃO (Execução controlada de reinício) | Não iniciado |
-| **CT18** | Permissão e validação do motivo para bloquear equipamento (9 vs 10 chars) | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT19** | Efeitos do bloqueio e desbloqueio de equipamento; preservação e auditoria | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT20** | Bloqueio e desbloqueio de região com cascata para equipamentos | Sistema, Integração, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
+| **CT18** | Permissão e validação do motivo para bloquear equipamento (9 vs 10 chars) | Sistema, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
+| **CT19** | Efeitos do bloqueio e desbloqueio de equipamento; preservação e auditoria | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
+| **CT20** | Bloqueio e desbloqueio de região com cascata para equipamentos | Sistema, Integração, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
 | **CT21** | Mapa de ocorrências e informações do marcador | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
 | **CT22** | Compatibilidade em Chrome, Firefox e Edge | Sistema | NÃO (Smoke test em navegadores) | Não iniciado |
 | **CT23** | Idioma da interface em português do Brasil | Sistema, Aceitação | NÃO / Complementar automatizado | Não iniciado |
