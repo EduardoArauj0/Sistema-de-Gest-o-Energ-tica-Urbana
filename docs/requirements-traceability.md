@@ -23,18 +23,18 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RF04** | Cadastrar, consultar, editar e inativar equipamentos | Alta | RN02, RN03, RN04 | UC03 | CA04.1, CA04.2, CA04.3 | CT03 | `backend/src/modules/equipment/` | `tests/unit/regions-and-equipment.test.js` (`CT03`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF05** | Gerar leituras simuladas em lote (normal, pico, falha) | Alta | RN04, RN05, RN24 | UC04 | CA05.1, CA05.2, CA05.3 | CT04, CT24 | `backend/src/modules/readings/` | `tests/unit/anomalies-and-readings.test.js` (`CT04`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF06** | Detectar anomalias (acima, abaixo, falha total) | Alta | RN06, RN28 | UC05 | CA06.1 a CA06.8 | CT05, CT06 | `backend/src/modules/anomalies/anomalyEngine.js` | `tests/unit/anomalies-and-readings.test.js` (`CT05`, `CT06`) | **Testado** (`CT05` e `CT06` aprovados; cobertura `nyc` na Etapa 10) |
-| **RF07** | Gerar/atualizar alerta para anomalia e classificar severidade | Alta | RN06, RN07, RN08 | UC05 | CA07.1, CA07.2, CA07.3 | CT05, CT06, CT07 | `backend/src/modules/anomalies/anomalyEngine.js`, `readings.repository.js` | `tests/unit/anomalies-and-readings.test.js` (`CT04`–`CT06`) | **Em desenvolvimento** (Severidade e criação/atualização em `readings` testadas; módulo de alertas na Etapa 6) |
-| **RF08** | Listar e filtrar alertas (severidade, região, tipo, situação) | Alta | RN07, RN08 | UC06 | CA08.1, CA08.2 | CT08 | `backend/src/modules/alerts/` (Etapa 6) | Planejado (`CT08`) | Não iniciado |
-| **RF09** | Abrir OS a partir de alerta, ocorrência ou manualmente | Alta | RN09, RN10, RN19 | UC07 | CA09.1, CA09.2, CA09.3 | CT09 | `backend/src/modules/work-orders/` (Etapa 6) | Planejado (`CT09`) | Não iniciado |
-| **RF10** | Atribuir OS a técnico e reatribuir (Aberta ou Atribuída) | Alta | RN10, RN11, RN21 | UC08 | CA10.1, CA10.2, CA10.3 | CT10 | `backend/src/modules/work-orders/` (Etapa 6) | Planejado (`CT10`) | Não iniciado |
-| **RF11** | Atualizar andamento e encerrar OS com solução aplicada | Alta | RN10, RN12, RN18 | UC09 | CA11.1 a CA11.5 | CT11 | `backend/src/modules/work-orders/` (Etapa 6) | Planejado (`CT11`) | Não iniciado |
+| **RF07** | Gerar/atualizar alerta para anomalia e classificar severidade | Alta | RN06, RN07, RN08 | UC05 | CA07.1, CA07.2, CA07.3 | CT05, CT06, CT07 | `backend/src/modules/anomalies/`, `readings.repository.js`, `alerts/` | `anomalies-and-readings.test.js`, `alerts-and-work-orders.test.js` (`CT05`–`CT07`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF08** | Listar e filtrar alertas (severidade, região, tipo, situação) | Alta | RN07, RN08 | UC06 | CA08.1, CA08.2 | CT08 | `backend/src/modules/alerts/` | `tests/unit/alerts-and-work-orders.test.js` (`CT08`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF09** | Abrir OS a partir de alerta, ocorrência ou manualmente | Alta | RN09, RN10, RN19 | UC07 | CA09.1, CA09.2, CA09.3 | CT09 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT09`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF10** | Atribuir OS a técnico e reatribuir (Aberta ou Atribuída) | Alta | RN10, RN11, RN21 | UC08 | CA10.1, CA10.2, CA10.3 | CT10 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT10`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF11** | Atualizar andamento e encerrar OS com solução aplicada | Alta | RN10, RN12, RN18 | UC09 | CA11.1 a CA11.5 | CT11 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT11`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF12** | Registrar ocorrência pelo cidadão sem login e gerar protocolo | Alta | RN13, RN22, RN23, RN26 | UC10 | CA12.1, CA12.2, CA12.3 | CT13 | `backend/src/modules/occurrences/` (Etapa 7) | Planejado (`CT13`) | Não iniciado |
 | **RF13** | Consultar status da ocorrência por protocolo (apenas status e tipo) | Média | RN15, RN22, RN26 | UC11 | CA13.1 | CT14 | `backend/src/modules/occurrences/` (Etapa 7) | Planejado (`CT14`) | Não iniciado |
 | **RF14** | Exibir dashboard com cards, gráficos, tabelas e filtros (mês corrente) | Alta | RN05, RN24 | UC12 | CA14.1, CA14.2, CA14.3 | CT15 | `backend/src/modules/dashboard/` (Etapa 8) | Planejado (`CT15`) | Não iniciado |
 | **RF15** | Exibir mapa interativo com ocorrências e informações básicas | Alta | RN01, RN29 | UC13 | CA15.1, CA15.2, CA15.3 | CT21 | `backend/src/modules/occurrences/`, `frontend/` (Etapas 8/9) | Planejado (`CT21`) | Não iniciado |
 | **RF16** | Emitir relatório de consumo (região/tipo, diário/mensal) e exportar CSV | Alta | RN24 | UC14 | CA16.1, CA16.2, CA16.3 | CT16 | `backend/src/modules/reports/` (Etapa 8) | Planejado (`CT16`) | Não iniciado |
 | **RF17** | Bloquear e desbloquear regiões e equipamentos com auditoria | Alta | RN16, RN17, RN27 | UC15 | CA17.1 a CA17.13 | CT18, CT19, CT20 | `backend/src/modules/regions/`, `backend/src/modules/equipment/` | `tests/unit/regions-and-equipment.test.js` (`CT18`–`CT20`) | **Testado** (API Backend; UI na Etapa 9) |
-| **RF18** | Cancelar OS em Aberta ou Atribuída com justificativa obrigatória | Média | RN10, RN14, RN21, RN25 | UC16 | CA18.1, CA18.2, CA18.3 | CT12 | `backend/src/modules/work-orders/` (Etapa 6) | Planejado (`CT12`) | Não iniciado |
+| **RF18** | Cancelar OS em Aberta ou Atribuída com justificativa obrigatória | Média | RN10, RN14, RN21, RN25 | UC16 | CA18.1, CA18.2, CA18.3 | CT12 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT12`) | **Testado** (API Backend; UI na Etapa 9) |
 
 ---
 
@@ -76,24 +76,24 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RN05** | Toda leitura possui origem `"SIMULADO"`, data/hora e equipamento | RF05, RNF17 / UC04 | CT04, CT24 | **Testado** (Validado na API/Banco em `CT04`; UI em `CT24` na Etapa 9) |
 | **RN06** | Detecção: falha total ($\le \text{TOL\_ZERO}$), acima ($\ge +\text{LIM\_SUP}$), abaixo ($\le -\text{LIM\_INF}$ e $> \text{TOL\_ZERO}$) | RF06 / UC05 | CT05, CT06 | **Testado** (Todos os 14 valores limites e caminhos P1–P6 validados em `CT05`/`CT06`) |
 | **RN07** | Severidade: Alta (falha total ou $\|\text{desvio}\| \ge 50\%$), Média ($20\%$ a $<50\%$), Baixa ($10\%$ a $<20\%$) | RF07 / UC05 | CT05, CT06, CT08 | **Testado** (Classificação validada em `CT05`/`CT06`; UI em `CT08` na Etapa 9) |
-| **RN08** | No máximo 1 alerta ativo por equipamento e tipo de anomalia (atualiza existente) | RF07, RF08 / UC05 | CT07 | **Em desenvolvimento** (Atualização sem duplicação validada no gerador na Etapa 5; `CT07` completo na Etapa 6) |
-| **RN09** | Toda OS possui local identificado, origem (`alerta`, `cidadao`, `manual`) e estado | RF09 / UC07 | CT09 | Não iniciado |
-| **RN10** | Transições de estado de OS/ocorrência seguem estritamente a tabela aprovada (Seção 4.7 / OD-01) | RF09–RF11, RF18 | CT09, CT11, CT12 | Não iniciado |
-| **RN11** | OS só pode ser atribuída a usuário com perfil Técnico ativo | RF10 / UC08 | CT10 | Não iniciado |
-| **RN12** | Apenas Técnico atribuído ou Gestor atualiza andamento e encerra OS (com solução) | RF11 / UC09 | CT11 | Não iniciado |
+| **RN08** | No máximo 1 alerta ativo por equipamento e tipo de anomalia (atualiza existente) | RF07, RF08 / UC05 | CT07 | **Testado** (`alerts-and-work-orders.test.js` — `CT07`) |
+| **RN09** | Toda OS possui local identificado, origem (`alerta`, `cidadao`, `manual`) e estado | RF09 / UC07 | CT09 | **Testado** (`alerts-and-work-orders.test.js` — `CT09`) |
+| **RN10** | Transições de estado de OS/ocorrência seguem estritamente a tabela aprovada (Seção 4.7 / OD-01) | RF09–RF11, RF18 | CT09, CT11, CT12 | **Testado** (`alerts-and-work-orders.test.js` — `CT09` a `CT12`) |
+| **RN11** | OS só pode ser atribuída a usuário com perfil Técnico ativo | RF10 / UC08 | CT10 | **Testado** (`alerts-and-work-orders.test.js` — `CT10`) |
+| **RN12** | Apenas Técnico atribuído ou Gestor atualiza andamento e encerra OS (com solução) | RF11 / UC09 | CT11 | **Testado** (`alerts-and-work-orders.test.js` — `CT11`) |
 | **RN13** | Ocorrência exige tipo, descrição, região, endereço/referência e identificação do cidadão | RF12 / UC10 | CT13 | Não iniciado |
-| **RN14** | Alertas, ocorrências e OS não são excluídos fisicamente (preservação histórica) | RNF02, RF18 | CT17 | Não iniciado |
-| **RN15** | Dados pessoais do cidadão são visíveis somente ao Gestor | RF02, RNF07 / UC10 | CT10, CT14 | Não iniciado |
+| **RN14** | Alertas, ocorrências e OS não são excluídos fisicamente (preservação histórica) | RNF02, RF18 | CT17 | **Em desenvolvimento** (Triggers SQLite na Etapa 2 e preservação no cancelamento em `CT12`) |
+| **RN15** | Dados pessoais do cidadão são visíveis somente ao Gestor | RF02, RNF07 / UC10 | CT10, CT14 | **Em desenvolvimento** (Validado na consulta de OS por Técnico vs Gestor em `CT10`; consulta pública em `CT14` na Etapa 7) |
 | **RN16** | Bloqueio exige motivo $\ge 10$ caracteres, confirmação imediata e registro de auditoria | RF17, RNF16 / UC15 | CT18, CT19, CT20 | **Testado** (`regions-and-equipment.test.js`) |
-| **RN17** | Objeto bloqueado não gera leituras/alertas, suspende alertas ativos e preserva OS em andamento; desbloqueio restaura estado | RF17 / UC15 | CT19, CT20 | **Testado** (`regions-and-equipment.test.js`; integração com gerador na Etapa 5) |
-| **RN18** | Alerta passa automaticamente para `Resolvido` quando OS vinculada é `Concluída` | RF11 / UC09 | CT11 | Não iniciado |
-| **RN19** | Alerta ativo possui no máximo uma OS em `Aberta`, `Atribuída` ou `Em atendimento` | RF09 / UC07 | CT09 | Não iniciado |
+| **RN17** | Objeto bloqueado não gera leituras/alertas, suspende alertas ativos e preserva OS em andamento; desbloqueio restaura estado | RF17 / UC15 | CT19, CT20 | **Testado** (`regions-and-equipment.test.js` e `anomalies-and-readings.test.js`) |
+| **RN18** | Alerta passa automaticamente para `Resolvido` quando OS vinculada é `Concluída` | RF11 / UC09 | CT11 | **Testado** (`alerts-and-work-orders.test.js` — `CT11`) |
+| **RN19** | Alerta ativo possui no máximo uma OS em `Aberta`, `Atribuída` ou `Em atendimento` | RF09 / UC07 | CT09 | **Testado** (`alerts-and-work-orders.test.js` — `CT09`) |
 | **RN20** | Inativar região inativa em cascata equipamentos vinculados e registra no histórico | RF03 / UC02 | CT02 | **Testado** (`regions-and-equipment.test.js`) |
-| **RN21** | Reatribuição e cancelamento de OS restritos ao Gestor em OS `Aberta` ou `Atribuída`; cancelamento exige justificativa | RF10, RF18 / UC08, UC16 | CT10, CT12 | Não iniciado |
+| **RN21** | Reatribuição e cancelamento de OS restritos ao Gestor em OS `Aberta` ou `Atribuída`; cancelamento exige justificativa | RF10, RF18 / UC08, UC16 | CT10, CT12 | **Testado** (`alerts-and-work-orders.test.js` — `CT10`, `CT12`) |
 | **RN22** | Cidadão não tem senha; recebe protocolo único para acompanhamento | RF12, RF13 / UC10, UC11 | CT13, CT14 | Não iniciado |
 | **RN23** | Tipos permitidos de ocorrência (5 tipos controlados conforme `RN23` e `OD-02`) | RF12 / UC10 | CT13 | Não iniciado |
 | **RN24** | Unidade de consumo é `kWh` e leituras são geradas em lote por botão do Gestor | RF05, RF14, RF16 / UC04 | CT04 | **Testado** (Validado na API em `CT04`; UI na Etapa 9) |
-| **RN25** | Se OS vinculada a alerta for `Cancelada`, alerta permanece `Ativo` e permite nova OS | RF18 / UC16 | CT12 | Não iniciado |
+| **RN25** | Se OS vinculada a alerta for `Cancelada`, alerta permanece `Ativo` e permite nova OS | RF18 / UC16 | CT12 | **Testado** (`alerts-and-work-orders.test.js` — `CT12`) |
 | **RN26** | Protocolo único (`PROTOCOLO-YYYYMMDDXXXX`); consulta pública exibe apenas status e tipo; CPF é fictício | RF12, RF13, RNF07 / UC11 | CT14 | Não iniciado |
 | **RN27** | Bloqueio de região bloqueia em cascata equipamentos Ativos; só Ativos podem ser bloqueados; desbloqueio exige só confirmação | RF17 / UC15 | CT18, CT20 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN28** | Consumo abaixo é desvio percentual negativo em relação ao esperado $E$ | RF06 / UC05 | CT05 | **Testado** (`anomalies-and-readings.test.js`) |
@@ -112,12 +112,12 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **CT04** | Geração em lote, origem simulada e resiliência à falha do gerador | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `anomalies-and-readings.test.js`) | **Testado** (Validado na API/Banco em `anomalies-and-readings.test.js`; E2E na Etapa 10) |
 | **CT05** | Detecção de anomalias e severidade por análise de valor-limite | Unidade, Aceitação | SIM (Unidade `anomalies-and-readings.test.js` / Cypress `cy.task`) | **Testado** (Todos os 14 valores limites validados em `anomalies-and-readings.test.js`) |
 | **CT06** | Caixa-branca do módulo de regras: comandos, decisões, determinismo, isolamento e configuração | Unidade, Integração Estrutural | SIM (Unidade `anomalies-and-readings.test.js` / Cypress `cy.task` + `nyc`) | **Testado** (Caminhos P1–P6, determinismo 100x, isolamento e `LIM_SUP=15%` validados; cobertura `nyc` na Etapa 10) |
-| **CT07** | Atualização de alerta ativo sem duplicação | Integração | SIM (Cypress API) | Não iniciado |
-| **CT08** | Filtros de alertas e identificação textual/visual da severidade | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
-| **CT09** | Abertura de OS por alerta, ocorrência e registro manual | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT10** | Atribuição/reatribuição de OS e autorização por perfil (privacidade LGPD) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT11** | Atendimento e encerramento de OS com solução (Técnico atribuído e Gestor) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT12** | Cancelamento de OS e preservação do alerta vinculado | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
+| **CT07** | Atualização de alerta ativo sem duplicação | Integração | SIM (Cypress API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`) |
+| **CT08** | Filtros de alertas e identificação textual/visual da severidade | Sistema, Aceitação | SIM (Cypress E2E + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
+| **CT09** | Abertura de OS por alerta, ocorrência e registro manual | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
+| **CT10** | Atribuição/reatribuição de OS e autorização por perfil (privacidade LGPD) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
+| **CT11** | Atendimento e encerramento de OS com solução (Técnico atribuído e Gestor) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
+| **CT12** | Cancelamento de OS e preservação do alerta vinculado | Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
 | **CT13** | Registro de ocorrência pelo Cidadão e medição de até três interações | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
 | **CT14** | Consulta de ocorrência por protocolo e privacidade da resposta | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
 | **CT15** | Dashboard: consistência, filtros, estado vazio e desempenho ($\le 3\text{s}$) | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |

@@ -240,3 +240,60 @@ Este documento descreve os contratos dos endpoints implementados na API REST do 
 - **Acesso:** Exclusivo `gestor` (`RNF13`, `CT06`).
 - **Corpo:** `{ "LIM_SUP": 15 }` ou `{ "reset": true }`.
 - **Efeito:** Atualiza os parâmetros de detecção em tempo de execução sem necessidade de alterar código-fonte e registra `ANOMALY_PARAMS_UPDATED` na auditoria.
+
+---
+
+## 9. Alertas de Anomalia (`RF07`, `RF08`, `RN07`, `RN08`, `RN14`, `RN17`, `RN18`, `RN25`, `RNF09`, `CT07`, `CT08`)
+
+### `GET /api/alerts`
+- **Acesso:** Autenticado (`gestor`, `tecnico`).
+- **Query Params Opcionais (`RF08`, `CT08`):**
+  - `severity`: `Alta` | `Media` (ou `Média`) | `Baixa`
+  - `region_id`: ID da região
+  - `equipment_id`: ID do equipamento
+  - `equipment_type`: `poste` | `predio_municipal`
+  - `anomaly_type`: `falha_total` | `consumo_acima` | `consumo_abaixo`
+  - `status`: `Ativo` | `Suspenso` | `Resolvido`
+- **Resposta `200 OK`:** Lista alertas enriquecidos com `anomaly_label`, `severity_label` (`Baixa`, `Média`, `Alta`), `severity_badge` (`{ text, color, cssClass }` — `RNF09`) e dados da OS ativa vinculada (`active_work_order_id`, `active_work_order_code`, `active_work_order_status`).
+
+### `GET /api/alerts/:id`
+- **Acesso:** Autenticado (`gestor`, `tecnico`).
+- **Resposta `200 OK`:** Detalhes completos do alerta.
+
+---
+
+## 10. Ordens de Serviço — OS (`RF09`–`RF11`, `RF18`, `RN09`–`RN12`, `RN14`, `RN15`, `RN18`, `RN19`, `RN21`, `RN25`, `RNF05`, `RNF07`, `RNF16`, `OD-01`, `OD-12`, `CT09`–`CT12`)
+
+### `GET /api/work-orders` e `GET /api/work-orders/:id`
+- **Acesso:** Autenticado (`gestor`, `tecnico`).
+- **Query Params Opcionais:** `status`, `origin` (`alerta` | `cidadao` | `manual`), `region_id`, `equipment_id`, `assigned_technician_id`, `alert_id`, `occurrence_id`.
+- **Proteção LGPD (`RN15`, `RNF07`, `CT10` passo 6):**
+  - Para `gestor`: inclui dados do cidadão (`citizen_name`, `citizen_email`, `citizen_phone`, `citizen_cpf_simulated`) quando originada de ocorrência cidadã.
+  - Para `tecnico`: omite integralmente os dados pessoais do cidadão, exibindo apenas os dados operacionais e o protocolo.
+
+### `POST /api/work-orders`
+- **Acesso:** Exclusivo `gestor` (`RF09`, `UC07`, `CT09`).
+- **Corpo:**
+  - Origem `alerta`: `{ "origin": "alerta", "alert_id": 1 }` (recusa com `409 ACTIVE_WORK_ORDER_ALREADY_EXISTS` se o alerta já possuir OS em `Aberta`, `Atribuída` ou `Em atendimento` — `RN19`).
+  - Origem `cidadao`: `{ "origin": "cidadao", "occurrence_id": 1 }` (atualiza a ocorrência para `Em atendimento` — `OD-01`).
+  - Origem `manual`: `{ "origin": "manual", "region_id": 1, "location": "...", "description": "..." }` (recusa `location` vazio com `400 VALIDATION_ERROR`, `field: "location"` — `RN09`).
+
+### `PATCH /api/work-orders/:id/assign` (ou `POST`)
+- **Acesso:** Exclusivo `gestor` (`RF10`, `UC08`, `RN11`, `RN21`, `CT10`).
+- **Corpo:** `{ "technician_id": 2 }`
+- **Regras:** Permitido apenas quando a OS está em `Aberta` ou `Atribuída` (caso contrário retorna `422 INVALID_STATE_TRANSITION`). Exige usuário ativo com perfil `tecnico`. Registra `WORK_ORDER_ASSIGNED` ou `WORK_ORDER_REASSIGNED`.
+
+### `PATCH /api/work-orders/:id/progress` (ou `POST`)
+- **Acesso:** `tecnico` atribuído à OS ou `gestor` (`RF11`, `UC09`, `RN12`, `OD-12`, `CT11`).
+- **Corpo:** `{ "progress_notes": "Descrição do andamento" }`
+- **Regras:** Técnico não atribuído recebe `403 FORBIDDEN_NOT_ASSIGNED` (auditado). Transiciona de `Atribuída` para `Em atendimento` e registra `WORK_ORDER_IN_PROGRESS`.
+
+### `PATCH /api/work-orders/:id/close` (ou `POST`)
+- **Acesso:** `tecnico` atribuído à OS ou `gestor` (`RF11`, `UC09`, `RN12`, `RN18`, `OD-12`, `CT11`).
+- **Corpo:** `{ "solution_description": "Substituição de relé fotoelétrico" }`
+- **Regras:** Exige estado atual `Em atendimento` (`422` caso contrário) e `solution_description` não vazio (`400 VALIDATION_ERROR`, `field: "solution_description"`). Transiciona a OS para `Concluída`, resolve automaticamente o alerta vinculado (`Resolvido` — `RN18`) ou ocorrência vinculada (`Resolvida` — `OD-01`) e registra `WORK_ORDER_CLOSED`.
+
+### `PATCH /api/work-orders/:id/cancel` (ou `POST`)
+- **Acesso:** Exclusivo `gestor` (`RF18`, `UC16`, `RN21`, `RN25`, `CT12`).
+- **Corpo:** `{ "cancellation_reason": "Motivo do cancelamento" }`
+- **Regras:** Permitido apenas em `Aberta` ou `Atribuída` (`422` se `Em atendimento`, `Concluída` ou `Cancelada`). Exige justificativa não vazia (`400 VALIDATION_ERROR`, `field: "cancellation_reason"`). Altera a OS para `Cancelada` preservando o histórico (`RN14`), mantém o alerta vinculado `Ativo` liberado para abertura de nova OS (`RN25`) e registra `WORK_ORDER_CANCELLED`.
