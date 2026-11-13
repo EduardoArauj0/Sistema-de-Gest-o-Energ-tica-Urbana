@@ -297,3 +297,50 @@ Este documento descreve os contratos dos endpoints implementados na API REST do 
 - **Acesso:** Exclusivo `gestor` (`RF18`, `UC16`, `RN21`, `RN25`, `CT12`).
 - **Corpo:** `{ "cancellation_reason": "Motivo do cancelamento" }`
 - **Regras:** Permitido apenas em `Aberta` ou `Atribuída` (`422` se `Em atendimento`, `Concluída` ou `Cancelada`). Exige justificativa não vazia (`400 VALIDATION_ERROR`, `field: "cancellation_reason"`). Altera a OS para `Cancelada` preservando o histórico (`RN14`), mantém o alerta vinculado `Ativo` liberado para abertura de nova OS (`RN25`) e registra `WORK_ORDER_CANCELLED`.
+
+---
+
+## 11. Ocorrências Cidadãs e Consulta Pública por Protocolo (`RF12`, `RF13`, `RN13`–`RN15`, `RN22`, `RN23`, `RN26`, `RNF07`–`RNF10`, `OD-01`, `OD-02`, `OD-04`, `OD-05`, `CT13`, `CT14`)
+
+### `GET /api/occurrences/types`
+- **Acesso:** Público (sem login).
+- **Resposta `200 OK`:** Lista os 5 tipos controlados de ocorrência (`RN23`, `OD-02`):
+  - `"poste apagado"`
+  - `"oscilação de energia"`
+  - `"falta de energia"`
+  - `"prédio público com consumo anormal"`
+  - `"iluminação acesa durante o dia"`
+
+### `POST /api/occurrences` (ou `POST /api/occurrences/public`)
+- **Acesso:** Público (Cidadão sem necessidade de login — `RF12`, `UC10`, `RN22`).
+- **Corpo:**
+  ```json
+  {
+    "type": "poste apagado",
+    "description": "Poste apagado em frente à escola municipal.",
+    "region_id": 1,
+    "equipment_id": 1,
+    "address_reference": "Praça Municipal, 15",
+    "citizen_name": "Ana Cidadã Fictícia",
+    "citizen_email": "ana.ficticia@simulado.local",
+    "citizen_phone": "71991234567",
+    "citizen_cpf_simulated": "000.111.222-33"
+  }
+  ```
+- **Validações (`RN13`, `RN23`, `OD-05`, `RNF09`, `RNF10`, `CT13`):**
+  - Exige `type` válido, `description`, `region_id` (ativa), `address_reference`, `citizen_name`, `citizen_email` e ao menos um entre `citizen_phone` ou `citizen_cpf_simulated`.
+  - Caso algum campo obrigatório falte, retorna `400 VALIDATION_ERROR` indicando `field` e `reason` em português, sem gerar protocolo.
+- **Resposta `201 Created`:** Gera protocolo único no formato `PROTOCOLO-YYYYMMDDXXXX` (`OD-04`) com situação inicial `Aberta`.
+
+### `GET /api/occurrences/public/:protocol` (ou `GET /api/occurrences/public?protocol=...` / `GET /api/occurrences/protocol/:protocol`)
+- **Acesso:** Público (Cidadão sem necessidade de login — `RF13`, `UC11`, `RN22`, `RN26`, `CT14`).
+- **Resposta `200 OK` (`CA13.1`, `RN15`, `RN26`, `RNF07`):**
+  - Retorna **exclusivamente** `protocol`, `status` (`Aberta`, `Em atendimento`, `Resolvida` ou `Cancelada`), `type`, `created_at` e `updated_at`.
+  - **Proteção LGPD:** Nenhum dado pessoal (`citizen_name`, `citizen_email`, `citizen_phone`, `citizen_cpf_simulated`) é retornado na consulta pública.
+- **Resposta `404 Not Found` (`CT14` passo 2):** Quando o protocolo não existe (`code: "OCCURRENCE_NOT_FOUND"`).
+
+### `GET /api/occurrences` e `GET /api/occurrences/:id`
+- **Acesso:** Autenticado (`gestor`, `tecnico`).
+- **Proteção LGPD (`RN15`, `RNF07`):**
+  - Para `gestor`: inclui os dados pessoais do cidadão para gestão administrativa.
+  - Para `tecnico`: omite `citizen_name`, `citizen_email`, `citizen_phone` e `citizen_cpf_simulated`.

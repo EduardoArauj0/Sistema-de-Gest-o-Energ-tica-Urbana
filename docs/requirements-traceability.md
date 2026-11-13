@@ -28,8 +28,8 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RF09** | Abrir OS a partir de alerta, ocorrência ou manualmente | Alta | RN09, RN10, RN19 | UC07 | CA09.1, CA09.2, CA09.3 | CT09 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT09`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF10** | Atribuir OS a técnico e reatribuir (Aberta ou Atribuída) | Alta | RN10, RN11, RN21 | UC08 | CA10.1, CA10.2, CA10.3 | CT10 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT10`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF11** | Atualizar andamento e encerrar OS com solução aplicada | Alta | RN10, RN12, RN18 | UC09 | CA11.1 a CA11.5 | CT11 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT11`) | **Testado** (API Backend; UI na Etapa 9) |
-| **RF12** | Registrar ocorrência pelo cidadão sem login e gerar protocolo | Alta | RN13, RN22, RN23, RN26 | UC10 | CA12.1, CA12.2, CA12.3 | CT13 | `backend/src/modules/occurrences/` (Etapa 7) | Planejado (`CT13`) | Não iniciado |
-| **RF13** | Consultar status da ocorrência por protocolo (apenas status e tipo) | Média | RN15, RN22, RN26 | UC11 | CA13.1 | CT14 | `backend/src/modules/occurrences/` (Etapa 7) | Planejado (`CT14`) | Não iniciado |
+| **RF12** | Registrar ocorrência pelo cidadão sem login e gerar protocolo | Alta | RN13, RN22, RN23, RN26 | UC10 | CA12.1, CA12.2, CA12.3 | CT13 | `backend/src/modules/occurrences/` | `tests/unit/occurrences.test.js` (`CT13`) | **Testado** (API Backend; UI e contagem de $\le 3$ interações na Etapa 9/10) |
+| **RF13** | Consultar status da ocorrência por protocolo (apenas status e tipo) | Média | RN15, RN22, RN26 | UC11 | CA13.1 | CT14 | `backend/src/modules/occurrences/` | `tests/unit/occurrences.test.js` (`CT14`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF14** | Exibir dashboard com cards, gráficos, tabelas e filtros (mês corrente) | Alta | RN05, RN24 | UC12 | CA14.1, CA14.2, CA14.3 | CT15 | `backend/src/modules/dashboard/` (Etapa 8) | Planejado (`CT15`) | Não iniciado |
 | **RF15** | Exibir mapa interativo com ocorrências e informações básicas | Alta | RN01, RN29 | UC13 | CA15.1, CA15.2, CA15.3 | CT21 | `backend/src/modules/occurrences/`, `frontend/` (Etapas 8/9) | Planejado (`CT21`) | Não iniciado |
 | **RF16** | Emitir relatório de consumo (região/tipo, diário/mensal) e exportar CSV | Alta | RN24 | UC14 | CA16.1, CA16.2, CA16.3 | CT16 | `backend/src/modules/reports/` (Etapa 8) | Planejado (`CT16`) | Não iniciado |
@@ -48,7 +48,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RNF04** | Segurança | Senhas armazenadas com hash seguro, nunca em texto claro | CT01 | `backend/src/shared/security/password.js`, `referenceSeedData.js`, `001_initial_schema.sql` | **Testado** (`database.test.js`, `auth-and-rbac.test.js`) |
 | **RNF05** | Segurança | Autenticação/autorização por perfil validada no servidor em cada requisição | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` | **Em desenvolvimento** (Middleware validado para rotas da Etapa 3 em `auth-and-rbac.test.js`) |
 | **RNF06** | Segurança | Sessão expira após 30 minutos de inatividade | CT01 | `backend/src/modules/auth/auth.service.js`, `sessions.repository.js` | **Testado** (Validado com 29min vs $\ge 30$min em `auth-and-rbac.test.js`) |
-| **RNF07** | Segurança/Privacidade | Dados pessoais do cidadão mínimos e visíveis apenas ao Gestor | CT10, CT14 | `backend/src/modules/occurrences/`, `backend/src/modules/work-orders/` (Etapas 6/7) | Não iniciado |
+| **RNF07** | Segurança/Privacidade | Dados pessoais do cidadão mínimos e visíveis apenas ao Gestor | CT10, CT14 | `backend/src/modules/occurrences/`, `backend/src/modules/work-orders/` | **Testado** (`alerts-and-work-orders.test.js` — `CT10` e `occurrences.test.js` — `CT14`) |
 | **RNF08** | Usabilidade | Registro de ocorrência em até 3 interações a partir da tela inicial | CT13 | `frontend/` (Etapa 9) | Não iniciado |
 | **RNF09** | Usabilidade | Severidade por cor e texto; erros informam campo e motivo | CT03, CT08, CT13 | `backend/src/shared/errors/AppError.js`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (`AppError` com `field` e `reason` criado na Etapa 1) |
 | **RNF10** | Usabilidade | Interface e mensagens em português do Brasil (`pt-BR`) | CT13, CT23 | `frontend/index.html`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (Base `pt-BR` criada na Etapa 1) |
@@ -81,20 +81,20 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RN10** | Transições de estado de OS/ocorrência seguem estritamente a tabela aprovada (Seção 4.7 / OD-01) | RF09–RF11, RF18 | CT09, CT11, CT12 | **Testado** (`alerts-and-work-orders.test.js` — `CT09` a `CT12`) |
 | **RN11** | OS só pode ser atribuída a usuário com perfil Técnico ativo | RF10 / UC08 | CT10 | **Testado** (`alerts-and-work-orders.test.js` — `CT10`) |
 | **RN12** | Apenas Técnico atribuído ou Gestor atualiza andamento e encerra OS (com solução) | RF11 / UC09 | CT11 | **Testado** (`alerts-and-work-orders.test.js` — `CT11`) |
-| **RN13** | Ocorrência exige tipo, descrição, região, endereço/referência e identificação do cidadão | RF12 / UC10 | CT13 | Não iniciado |
+| **RN13** | Ocorrência exige tipo, descrição, região, endereço/referência e identificação do cidadão | RF12 / UC10 | CT13 | **Testado** (`occurrences.test.js` — `CT13`) |
 | **RN14** | Alertas, ocorrências e OS não são excluídos fisicamente (preservação histórica) | RNF02, RF18 | CT17 | **Em desenvolvimento** (Triggers SQLite na Etapa 2 e preservação no cancelamento em `CT12`) |
-| **RN15** | Dados pessoais do cidadão são visíveis somente ao Gestor | RF02, RNF07 / UC10 | CT10, CT14 | **Em desenvolvimento** (Validado na consulta de OS por Técnico vs Gestor em `CT10`; consulta pública em `CT14` na Etapa 7) |
+| **RN15** | Dados pessoais do cidadão são visíveis somente ao Gestor | RF02, RNF07 / UC10 | CT10, CT14 | **Testado** (`alerts-and-work-orders.test.js` — `CT10` e `occurrences.test.js` — `CT14`) |
 | **RN16** | Bloqueio exige motivo $\ge 10$ caracteres, confirmação imediata e registro de auditoria | RF17, RNF16 / UC15 | CT18, CT19, CT20 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN17** | Objeto bloqueado não gera leituras/alertas, suspende alertas ativos e preserva OS em andamento; desbloqueio restaura estado | RF17 / UC15 | CT19, CT20 | **Testado** (`regions-and-equipment.test.js` e `anomalies-and-readings.test.js`) |
 | **RN18** | Alerta passa automaticamente para `Resolvido` quando OS vinculada é `Concluída` | RF11 / UC09 | CT11 | **Testado** (`alerts-and-work-orders.test.js` — `CT11`) |
 | **RN19** | Alerta ativo possui no máximo uma OS em `Aberta`, `Atribuída` ou `Em atendimento` | RF09 / UC07 | CT09 | **Testado** (`alerts-and-work-orders.test.js` — `CT09`) |
 | **RN20** | Inativar região inativa em cascata equipamentos vinculados e registra no histórico | RF03 / UC02 | CT02 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN21** | Reatribuição e cancelamento de OS restritos ao Gestor em OS `Aberta` ou `Atribuída`; cancelamento exige justificativa | RF10, RF18 / UC08, UC16 | CT10, CT12 | **Testado** (`alerts-and-work-orders.test.js` — `CT10`, `CT12`) |
-| **RN22** | Cidadão não tem senha; recebe protocolo único para acompanhamento | RF12, RF13 / UC10, UC11 | CT13, CT14 | Não iniciado |
-| **RN23** | Tipos permitidos de ocorrência (5 tipos controlados conforme `RN23` e `OD-02`) | RF12 / UC10 | CT13 | Não iniciado |
+| **RN22** | Cidadão não tem senha; recebe protocolo único para acompanhamento | RF12, RF13 / UC10, UC11 | CT13, CT14 | **Testado** (`occurrences.test.js` — `CT13`, `CT14`) |
+| **RN23** | Tipos permitidos de ocorrência (5 tipos controlados conforme `RN23` e `OD-02`) | RF12 / UC10 | CT13 | **Testado** (`occurrences.test.js` — `CT13`) |
 | **RN24** | Unidade de consumo é `kWh` e leituras são geradas em lote por botão do Gestor | RF05, RF14, RF16 / UC04 | CT04 | **Testado** (Validado na API em `CT04`; UI na Etapa 9) |
 | **RN25** | Se OS vinculada a alerta for `Cancelada`, alerta permanece `Ativo` e permite nova OS | RF18 / UC16 | CT12 | **Testado** (`alerts-and-work-orders.test.js` — `CT12`) |
-| **RN26** | Protocolo único (`PROTOCOLO-YYYYMMDDXXXX`); consulta pública exibe apenas status e tipo; CPF é fictício | RF12, RF13, RNF07 / UC11 | CT14 | Não iniciado |
+| **RN26** | Protocolo único (`PROTOCOLO-YYYYMMDDXXXX`); consulta pública exibe apenas status e tipo; CPF é fictício | RF12, RF13, RNF07 / UC11 | CT14 | **Testado** (`occurrences.test.js` — `CT13`, `CT14`) |
 | **RN27** | Bloqueio de região bloqueia em cascata equipamentos Ativos; só Ativos podem ser bloqueados; desbloqueio exige só confirmação | RF17 / UC15 | CT18, CT20 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN28** | Consumo abaixo é desvio percentual negativo em relação ao esperado $E$ | RF06 / UC05 | CT05 | **Testado** (`anomalies-and-readings.test.js`) |
 | **RN29** | Coordenadas geográficas simuladas fixas exibidas com Leaflet.js e OpenStreetMap | RF15 / UC13 | CT21 | Não iniciado |
@@ -118,8 +118,8 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **CT10** | Atribuição/reatribuição de OS e autorização por perfil (privacidade LGPD) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
 | **CT11** | Atendimento e encerramento de OS com solução (Técnico atribuído e Gestor) | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
 | **CT12** | Cancelamento de OS e preservação do alerta vinculado | Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
-| **CT13** | Registro de ocorrência pelo Cidadão e medição de até três interações | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
-| **CT14** | Consulta de ocorrência por protocolo e privacidade da resposta | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
+| **CT13** | Registro de ocorrência pelo Cidadão e medição de até três interações | Sistema, Aceitação | SIM (Cypress E2E + `occurrences.test.js`) | **Testado** (Validado na API/Banco em `occurrences.test.js`; medição de $\le 3$ interações E2E na Etapa 10) |
+| **CT14** | Consulta de ocorrência por protocolo e privacidade da resposta | Sistema, Aceitação | SIM (Cypress E2E/API + `occurrences.test.js`) | **Testado** (Validado na API/Banco em `occurrences.test.js`; E2E na Etapa 10) |
 | **CT15** | Dashboard: consistência, filtros, estado vazio e desempenho ($\le 3\text{s}$) | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
 | **CT16** | Relatório de consumo, agregação, granularidade, CSV e período inválido | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
 | **CT17** | Persistência de alertas, ocorrências e OS após reinício | Sistema | NÃO (Execução controlada de reinício) | Não iniciado |
