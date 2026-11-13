@@ -9,6 +9,8 @@ const { createReadingsRouter } = require('./modules/readings/readings.routes');
 const { createAlertsRouter } = require('./modules/alerts/alerts.routes');
 const { createWorkOrdersRouter } = require('./modules/work-orders/workOrders.routes');
 const { createOccurrencesRouter } = require('./modules/occurrences/occurrences.routes');
+const { createDashboardRouter } = require('./modules/dashboard/dashboard.routes');
+const { createReportsRouter } = require('./modules/reports/reports.routes');
 const { createAuditRouter } = require('./modules/audit/audit.routes');
 const { createTestingRouter } = require('./modules/testing/testing.routes');
 const { notFoundHandler, errorHandler } = require('./middlewares/error.middleware');
@@ -39,7 +41,7 @@ function createApp() {
     });
   });
 
-  // Rotas de Autenticação, Usuários, Regiões, Equipamentos, Leituras, Alertas, OS, Ocorrências e Auditoria (Etapas 3 a 7)
+  // Rotas de Autenticação, Usuários, Regiões, Equipamentos, Leituras, Alertas, OS, Ocorrências, Dashboard, Relatórios e Auditoria (Etapas 3 a 8)
   app.use('/api/auth', createAuthRouter());
   app.use('/api/users', createUsersRouter());
   app.use('/api/regions', createRegionsRouter());
@@ -48,6 +50,8 @@ function createApp() {
   app.use('/api/alerts', createAlertsRouter());
   app.use('/api/work-orders', createWorkOrdersRouter());
   app.use('/api/occurrences', createOccurrencesRouter());
+  app.use('/api/dashboard', createDashboardRouter());
+  app.use('/api/reports', createReportsRouter());
   app.use('/api/audit', createAuditRouter());
 
   // RNF20 / CT26: Endpoint de reset e seed existe SOMENTE em ambiente de teste

@@ -344,3 +344,46 @@ Este documento descreve os contratos dos endpoints implementados na API REST do 
 - **Proteção LGPD (`RN15`, `RNF07`):**
   - Para `gestor`: inclui os dados pessoais do cidadão para gestão administrativa.
   - Para `tecnico`: omite `citizen_name`, `citizen_email`, `citizen_phone` e `citizen_cpf_simulated`.
+
+---
+
+## 12. Dashboard Gerencial e Mapa Interativo (`RF14`, `RF15`, `RN01`, `RN15`, `RN24`, `RN29`, `RNF07`, `RNF11`, `RNF17`, `CT15`, `CT21`)
+
+### `GET /api/dashboard`
+- **Acesso:** Exclusivo `gestor` (`RF14`, `UC12`, `RN01`, `CA02.1`, `CT15`).
+- **Query Params Opcionais:**
+  - `start_date` e `end_date` (ou `month=YYYY-MM`; quando omitidos, assume o **mês corrente** — `CA14.1`).
+  - `region_id`: ID da região.
+  - `equipment_type`: `poste` | `predio_municipal`.
+- **Resposta `200 OK` ($\le 3\text{s}$ — `RNF11`):**
+  - `cards`: `total_consumption_kwh`, `total_expected_kwh`, `readings_count`, `anomalous_readings_count`, `active_alerts_count`, `open_work_orders_count`, `open_occurrences_count`, `active_equipments_count`, `unit: "kWh"`.
+  - `charts`: `consumption_by_region`, `consumption_by_type`, `alerts_by_severity`, `daily_trend`.
+  - `tables`: `recent_alerts` (com `severity_badge`), `recent_work_orders`.
+  - `isEmpty` e `emptyMessage`: quando não há leituras no filtro selecionado (`CA14.3`, `CT15` passo 3).
+
+### `GET /api/dashboard/map`
+- **Acesso:** Autenticado (`gestor`, `tecnico` — `RF15`, `UC13`, `RN01`, `CT21`).
+- **Query Params Opcionais:** `region_id`, `status`, `type`.
+- **Resposta `200 OK`:**
+  - `occurrence_markers`: Marcadores georreferenciados das ocorrências com `popup` (`protocol`, `type`, `status`, `region_name`, `address_reference`) sem exposição de dados pessoais do cidadão (`CA15.2`, `RN15`, `RNF07`).
+  - `equipment_markers`: Marcadores fixos simulados dos 20 equipamentos (`RN29`, `OD-10`) com status e contagem de alertas ativos.
+  - `regions`: Centros geográficos de `REG-A` e `REG-B`.
+  - `tileConfig`: Configuração `Leaflet.js` + `OpenStreetMap` e mensagem de contingência (`offlineFallbackMessage`) caso os blocos cartográficos externos não carreguem (`CA15.3`, `CT21` passo 3).
+
+---
+
+## 13. Relatórios de Consumo e Exportação CSV (`RF16`, `UC14`, `RN24`, `RNF09`, `RNF10`, `RNF17`, `CT16`)
+
+### `GET /api/reports/consumption`
+- **Acesso:** Exclusivo `gestor` (`RF16`, `UC14`, `RN01`).
+- **Query Params Opcionais:**
+  - `start_date`, `end_date`: datas no formato `YYYY-MM-DD` (recusa `start_date > end_date` com `400 VALIDATION_ERROR`, `field: "start_date"` — `CA16.3`, `CT16` passo 4).
+  - `granularity`: `diario` (padrão) | `mensal` (`CA16.1`, `CT16` passos 1 e 2).
+  - `region_id`: ID da região.
+  - `equipment_type`: `poste` | `predio_municipal`.
+  - `format`: `json` (padrão) | `csv`.
+- **Resposta `200 OK`:** Retorna `summary` e `rows` agregados em `kWh` com `origin: "SIMULADO"`.
+
+### `GET /api/reports/consumption/csv`
+- **Acesso:** Exclusivo `gestor` (`CA16.2`, `CT16` passo 3).
+- **Resposta `200 OK` (`text/csv; charset=utf-8`):** Exporta arquivo CSV com cabeçalho em português e linhas idênticas às do relatório em tela.

@@ -30,9 +30,9 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RF11** | Atualizar andamento e encerrar OS com solução aplicada | Alta | RN10, RN12, RN18 | UC09 | CA11.1 a CA11.5 | CT11 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT11`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF12** | Registrar ocorrência pelo cidadão sem login e gerar protocolo | Alta | RN13, RN22, RN23, RN26 | UC10 | CA12.1, CA12.2, CA12.3 | CT13 | `backend/src/modules/occurrences/` | `tests/unit/occurrences.test.js` (`CT13`) | **Testado** (API Backend; UI e contagem de $\le 3$ interações na Etapa 9/10) |
 | **RF13** | Consultar status da ocorrência por protocolo (apenas status e tipo) | Média | RN15, RN22, RN26 | UC11 | CA13.1 | CT14 | `backend/src/modules/occurrences/` | `tests/unit/occurrences.test.js` (`CT14`) | **Testado** (API Backend; UI na Etapa 9) |
-| **RF14** | Exibir dashboard com cards, gráficos, tabelas e filtros (mês corrente) | Alta | RN05, RN24 | UC12 | CA14.1, CA14.2, CA14.3 | CT15 | `backend/src/modules/dashboard/` (Etapa 8) | Planejado (`CT15`) | Não iniciado |
-| **RF15** | Exibir mapa interativo com ocorrências e informações básicas | Alta | RN01, RN29 | UC13 | CA15.1, CA15.2, CA15.3 | CT21 | `backend/src/modules/occurrences/`, `frontend/` (Etapas 8/9) | Planejado (`CT21`) | Não iniciado |
-| **RF16** | Emitir relatório de consumo (região/tipo, diário/mensal) e exportar CSV | Alta | RN24 | UC14 | CA16.1, CA16.2, CA16.3 | CT16 | `backend/src/modules/reports/` (Etapa 8) | Planejado (`CT16`) | Não iniciado |
+| **RF14** | Exibir dashboard com cards, gráficos, tabelas e filtros (mês corrente) | Alta | RN05, RN24 | UC12 | CA14.1, CA14.2, CA14.3 | CT15 | `backend/src/modules/dashboard/` | `tests/unit/dashboard-map-reports.test.js` (`CT15`) | **Testado** (API Backend; UI na Etapa 9) |
+| **RF15** | Exibir mapa interativo com ocorrências e informações básicas | Alta | RN01, RN29 | UC13 | CA15.1, CA15.2, CA15.3 | CT21 | `backend/src/modules/dashboard/` | `tests/unit/dashboard-map-reports.test.js` (`CT21`) | **Testado** (API Backend; UI Leaflet na Etapa 9) |
+| **RF16** | Emitir relatório de consumo (região/tipo, diário/mensal) e exportar CSV | Alta | RN24 | UC14 | CA16.1, CA16.2, CA16.3 | CT16 | `backend/src/modules/reports/` | `tests/unit/dashboard-map-reports.test.js` (`CT16`) | **Testado** (API Backend e CSV; UI na Etapa 9) |
 | **RF17** | Bloquear e desbloquear regiões e equipamentos com auditoria | Alta | RN16, RN17, RN27 | UC15 | CA17.1 a CA17.13 | CT18, CT19, CT20 | `backend/src/modules/regions/`, `backend/src/modules/equipment/` | `tests/unit/regions-and-equipment.test.js` (`CT18`–`CT20`) | **Testado** (API Backend; UI na Etapa 9) |
 | **RF18** | Cancelar OS em Aberta ou Atribuída com justificativa obrigatória | Média | RN10, RN14, RN21, RN25 | UC16 | CA18.1, CA18.2, CA18.3 | CT12 | `backend/src/modules/work-orders/` | `tests/unit/alerts-and-work-orders.test.js` (`CT12`) | **Testado** (API Backend; UI na Etapa 9) |
 
@@ -43,7 +43,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | ID | Atributo | Requisito Resumido | Casos de Teste | Módulos / Arquivos | Situação |
 |---|---|---|---|---|---|
 | **RNF01** | Confiabilidade | Detecção de anomalias determinística (100% idêntica para mesma entrada) | CT06 | `backend/src/modules/anomalies/anomalyEngine.js` | **Testado** (100 repetições idênticas validadas em `anomalies-and-readings.test.js`) |
-| **RNF02** | Confiabilidade | Alertas, ocorrências e OS íntegros após reinício da aplicação | CT17 | `backend/src/database/connection.js`, `001_initial_schema.sql` | **Em desenvolvimento** (Schema SQLite persistente e triggers `RN14` criados na Etapa 2) |
+| **RNF02** | Confiabilidade | Alertas, ocorrências e OS íntegros após reinício da aplicação | CT17 | `backend/src/database/connection.js`, `001_initial_schema.sql` | **Testado** (`dashboard-map-reports.test.js` — `CT17`) |
 | **RNF03** | Confiabilidade | Falha no gerador não impede consulta; erro registrado em log | CT04 | `backend/src/shared/logger/logger.js`, `backend/src/modules/readings/readings.service.js` | **Testado** (Falha injetada, preservação de dados e log `app-error.log` validados em `CT04`) |
 | **RNF04** | Segurança | Senhas armazenadas com hash seguro, nunca em texto claro | CT01 | `backend/src/shared/security/password.js`, `referenceSeedData.js`, `001_initial_schema.sql` | **Testado** (`database.test.js`, `auth-and-rbac.test.js`) |
 | **RNF05** | Segurança | Autenticação/autorização por perfil validada no servidor em cada requisição | CT01, CT10, CT18 | `backend/src/middlewares/auth.middleware.js` | **Em desenvolvimento** (Middleware validado para rotas da Etapa 3 em `auth-and-rbac.test.js`) |
@@ -52,7 +52,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RNF08** | Usabilidade | Registro de ocorrência em até 3 interações a partir da tela inicial | CT13 | `frontend/` (Etapa 9) | Não iniciado |
 | **RNF09** | Usabilidade | Severidade por cor e texto; erros informam campo e motivo | CT03, CT08, CT13 | `backend/src/shared/errors/AppError.js`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (`AppError` com `field` e `reason` criado na Etapa 1) |
 | **RNF10** | Usabilidade | Interface e mensagens em português do Brasil (`pt-BR`) | CT13, CT23 | `frontend/index.html`, `backend/src/middlewares/error.middleware.js` | **Em desenvolvimento** (Base `pt-BR` criada na Etapa 1) |
-| **RNF11** | Eficiência | Dashboard carrega em até 3s com a massa de referência (2 regiões, 20 equipamentos) | CT15 | `backend/src/modules/dashboard/`, `frontend/` (Etapas 8/10) | Não iniciado |
+| **RNF11** | Eficiência | Dashboard carrega em até 3s com a massa de referência (2 regiões, 20 equipamentos) | CT15 | `backend/src/modules/dashboard/` | **Testado** (Validado na API $< 50\text{ms} \le 3\text{s}$ em `CT15`; E2E na Etapa 10) |
 | **RNF12** | Manutenibilidade | Regras de anomalia em módulo isolado, sem banco ou interface | CT06 | `backend/src/modules/anomalies/anomalyEngine.js` | **Testado** (Isolamento estrutural e funcional validados em `CT06`) |
 | **RNF13** | Manutenibilidade | Limites e faixas configuráveis sem alteração de código | CT06 | `backend/src/config/anomaly-params.json`, `anomalyEngine.js`, `readings.service.js` | **Testado** (Alteração de `LIM_SUP` de `10%` para `15%` validada com `114`/`115 kWh` em `CT06`) |
 | **RNF14** | Manutenibilidade | Projeto versionado no GitHub com commits de pelo menos 2 integrantes | CT25 | Repositório Git (commits manuais pelo proprietário/equipe) | Em desenvolvimento (Git inicializado) |
@@ -82,7 +82,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RN11** | OS só pode ser atribuída a usuário com perfil Técnico ativo | RF10 / UC08 | CT10 | **Testado** (`alerts-and-work-orders.test.js` — `CT10`) |
 | **RN12** | Apenas Técnico atribuído ou Gestor atualiza andamento e encerra OS (com solução) | RF11 / UC09 | CT11 | **Testado** (`alerts-and-work-orders.test.js` — `CT11`) |
 | **RN13** | Ocorrência exige tipo, descrição, região, endereço/referência e identificação do cidadão | RF12 / UC10 | CT13 | **Testado** (`occurrences.test.js` — `CT13`) |
-| **RN14** | Alertas, ocorrências e OS não são excluídos fisicamente (preservação histórica) | RNF02, RF18 | CT17 | **Em desenvolvimento** (Triggers SQLite na Etapa 2 e preservação no cancelamento em `CT12`) |
+| **RN14** | Alertas, ocorrências e OS não são excluídos fisicamente (preservação histórica) | RNF02, RF18 | CT17 | **Testado** (`database.test.js`, `alerts-and-work-orders.test.js` e `dashboard-map-reports.test.js` — `CT17`) |
 | **RN15** | Dados pessoais do cidadão são visíveis somente ao Gestor | RF02, RNF07 / UC10 | CT10, CT14 | **Testado** (`alerts-and-work-orders.test.js` — `CT10` e `occurrences.test.js` — `CT14`) |
 | **RN16** | Bloqueio exige motivo $\ge 10$ caracteres, confirmação imediata e registro de auditoria | RF17, RNF16 / UC15 | CT18, CT19, CT20 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN17** | Objeto bloqueado não gera leituras/alertas, suspende alertas ativos e preserva OS em andamento; desbloqueio restaura estado | RF17 / UC15 | CT19, CT20 | **Testado** (`regions-and-equipment.test.js` e `anomalies-and-readings.test.js`) |
@@ -97,7 +97,7 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **RN26** | Protocolo único (`PROTOCOLO-YYYYMMDDXXXX`); consulta pública exibe apenas status e tipo; CPF é fictício | RF12, RF13, RNF07 / UC11 | CT14 | **Testado** (`occurrences.test.js` — `CT13`, `CT14`) |
 | **RN27** | Bloqueio de região bloqueia em cascata equipamentos Ativos; só Ativos podem ser bloqueados; desbloqueio exige só confirmação | RF17 / UC15 | CT18, CT20 | **Testado** (`regions-and-equipment.test.js`) |
 | **RN28** | Consumo abaixo é desvio percentual negativo em relação ao esperado $E$ | RF06 / UC05 | CT05 | **Testado** (`anomalies-and-readings.test.js`) |
-| **RN29** | Coordenadas geográficas simuladas fixas exibidas com Leaflet.js e OpenStreetMap | RF15 / UC13 | CT21 | Não iniciado |
+| **RN29** | Coordenadas geográficas simuladas fixas exibidas com Leaflet.js e OpenStreetMap | RF15 / UC13 | CT21 | **Testado** (API de marcadores e metadados Leaflet/OSM validada em `CT21`; UI na Etapa 9) |
 | **RN30** | Gestor e Técnico autenticam-se com sessão no servidor; Cidadão sem login; persistência em SQLite | RF01, RNF02, RNF18 | CT01, CT17 | **Testado** (Validado em `auth-and-rbac.test.js`) |
 
 ---
@@ -120,13 +120,13 @@ Este documento mantém a rastreabilidade contínua entre **Requisitos Funcionais
 | **CT12** | Cancelamento de OS e preservação do alerta vinculado | Sistema, Aceitação | SIM (Cypress E2E/API + `alerts-and-work-orders.test.js`) | **Testado** (Validado na API/Banco em `alerts-and-work-orders.test.js`; E2E na Etapa 10) |
 | **CT13** | Registro de ocorrência pelo Cidadão e medição de até três interações | Sistema, Aceitação | SIM (Cypress E2E + `occurrences.test.js`) | **Testado** (Validado na API/Banco em `occurrences.test.js`; medição de $\le 3$ interações E2E na Etapa 10) |
 | **CT14** | Consulta de ocorrência por protocolo e privacidade da resposta | Sistema, Aceitação | SIM (Cypress E2E/API + `occurrences.test.js`) | **Testado** (Validado na API/Banco em `occurrences.test.js`; E2E na Etapa 10) |
-| **CT15** | Dashboard: consistência, filtros, estado vazio e desempenho ($\le 3\text{s}$) | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
-| **CT16** | Relatório de consumo, agregação, granularidade, CSV e período inválido | Sistema, Aceitação | SIM (Cypress E2E/API) | Não iniciado |
-| **CT17** | Persistência de alertas, ocorrências e OS após reinício | Sistema | NÃO (Execução controlada de reinício) | Não iniciado |
+| **CT15** | Dashboard: consistência, filtros, estado vazio e desempenho ($\le 3\text{s}$) | Sistema, Aceitação | SIM (Cypress E2E + `dashboard-map-reports.test.js`) | **Testado** (Validado na API/Banco em `dashboard-map-reports.test.js`; E2E na Etapa 10) |
+| **CT16** | Relatório de consumo, agregação, granularidade, CSV e período inválido | Sistema, Aceitação | SIM (Cypress E2E/API + `dashboard-map-reports.test.js`) | **Testado** (Validado na API/CSV em `dashboard-map-reports.test.js`; E2E na Etapa 10) |
+| **CT17** | Persistência de alertas, ocorrências e OS após reinício | Sistema | SIM (`dashboard-map-reports.test.js` — reinício controlado) | **Testado** (`dashboard-map-reports.test.js` — `CT17`) |
 | **CT18** | Permissão e validação do motivo para bloquear equipamento (9 vs 10 chars) | Sistema, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
 | **CT19** | Efeitos do bloqueio e desbloqueio de equipamento; preservação e auditoria | Integração, Sistema, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
 | **CT20** | Bloqueio e desbloqueio de região com cascata para equipamentos | Sistema, Integração, Aceitação | SIM (Cypress E2E/API + `regions-and-equipment.test.js`) | **Testado** (Validado na API/Banco; E2E na Etapa 10) |
-| **CT21** | Mapa de ocorrências e informações do marcador | Sistema, Aceitação | SIM (Cypress E2E) | Não iniciado |
+| **CT21** | Mapa de ocorrências e informações do marcador | Sistema, Aceitação | SIM (Cypress E2E + `dashboard-map-reports.test.js`) | **Testado** (Validado na API em `dashboard-map-reports.test.js`; E2E Leaflet na Etapa 10) |
 | **CT22** | Compatibilidade em Chrome, Firefox e Edge | Sistema | NÃO (Smoke test em navegadores) | Não iniciado |
 | **CT23** | Idioma da interface em português do Brasil | Sistema, Aceitação | NÃO / Complementar automatizado | Não iniciado |
 | **CT24** | Transparência da simulação e origem das leituras (`SIMULADO`) | Integração, Sistema | SIM (Cypress E2E/API) | Não iniciado |
